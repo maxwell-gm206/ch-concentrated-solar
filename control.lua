@@ -29,6 +29,11 @@ local function calc_sun(surface)
 	end
 end
 
+local function getSunStage(time_info)
+
+	return math.floor(time_info.sun * sun_stages) - 1
+end
+
 local function distance_to_tower(mirror)
 
 	return util.distance(mirror.position, global.mirror_tower[mirror.unit_number].position)
@@ -40,11 +45,30 @@ local mirror_kw = 100
 local fluid_kj = 1000
 local fluidPerTickPerMirror = mirror_kw / fluid_kj / 60
 local tower_capture_radius = 40
+sun_stages = 20
+-- Number of groups of mirrors that will have sun rays spawned on them
+local mirror_groups = 100
+-- Number of sets of mirrors, used to spawn sun-rays
+
+
+local function generateBeam(mirror, tower, ttl)
+
+	global.mirror_tower[mirror.unit_number].beam = mirror.surface.create_entity {
+		position = mirror.position,
+		name = control_util.mod_prefix .. "mirred-solar-beam",
+		raise_built = false,
+		time_to_live = ttl,
+		target_position = { tower.position.x, tower.position.y - 13 },
+		source_position = mirror.position
+	}
+
+end
 
 local function linkMirrorToTower(tower, mirror)
 
-	local mid = mirror.unit_number
+	assert(tower.surface.index == mirror.surface.index, "Attempted to link tower and mirror on different surfaces")
 
+	local mid = mirror.unit_number
 
 	if global.mirror_tower[mid] ~= nil then
 		if global.mirror_tower[mid].tower.unit_number == tower.unit_number then
@@ -55,10 +79,9 @@ local function linkMirrorToTower(tower, mirror)
 
 
 
-	mirror.shooting_target = tower
-
 	global.mirror_tower[mid] = {
 		tower = tower,
+		mirror = mirror,
 		beam = nil,
 	}
 
@@ -72,12 +95,21 @@ local function linkMirrorToTower(tower, mirror)
 
 	mirror.orientation = -math.atan2(y, x) * 0.15915494309 + 0.25
 
+	time = calc_sun(mirror.surface)
+
+	stage = getSunStage(time)
+
+	if mid % mirror_groups < stage then
+		generateBeam(mirror, tower, (mirror.surface.daytime - mirror.surface.evening) * mirror.surface.ticks_per_day)
+	end
+
+
 end
 
 local function cleanTrees()
-	if global.mirror_tower ~= nil then
+	if global.mirror_tower then
 		for key, value in pairs(global.mirror_tower) do
-			if value.beam ~= nil then
+			if value.beam then
 
 				value.beam.destroy()
 			end
@@ -95,9 +127,16 @@ local function buildTrees()
 	global.mirror_tower = {}
 	global.mirrors = {}
 	global.towers = {}
+	if global.surfaces == nil then
+		global.surfaces = {}
+	end
 
 
 	for _, surface in pairs(game.surfaces) do
+		if global.surfaces[surface.index] == nil then
+			--game.print("reseting surface" .. surface.index)
+			global.surfaces[surface.index] = { last_sun_stage = 0, surface = surface }
+		end
 
 		towers = surface.find_entities_filtered({ name = control_util.solar_power_tower });
 
@@ -105,13 +144,13 @@ local function buildTrees()
 		--game.print(surface.name)
 		--game.print(#towers)
 
-		if (towers ~= nil) then
+		if towers then
 			for _, tower in ipairs(towers) do
 
 
 				--game.print(tower.position)
 
-				mirrors = surface.find_entities_filtered {
+				local mirrors = surface.find_entities_filtered {
 					name = control_util.heliostat_mirror,
 					position = tower.position,
 					radius = tower_capture_radius
@@ -166,107 +205,130 @@ local function removeMirrorFromTower(tower, mirror, remove_mirror_from_tower_lin
 
 end
 
-script.on_nth_tick(ticks, function(event)
+script.on_init(buildTrees)
 
+script.on_nth_tick(ticks, function(event)
+	--buildTrees()
 	--buildTrees()
 
 	--game.print("iterating!")
 
-	--game.print("Ticked")
 
-	--game.print(serpent.block(game, { comment = false }))
-
-	if global.tower_mirrors ~= nil then
-		--surface.ticks_per_day = 25000
-		--game.print(sun)
-		--game.print("has towers")
-
-		--for i = 1, #entities do
-		--	game.print(serpent.block(entities[i]))
-		--end
-
-		for tower_num, mirrors in pairs(global.tower_mirrors) do
-			tower = global.towers[tower_num]
-
-			--game.print(tower.position)
-
-			surface = tower.surface
-
-			local time_info = calc_sun(surface)
+	if global.surfaces then
+		for sid, data in pairs(global.surfaces) do
+			time_info = calc_sun(data.surface)
 			local sun = time_info.sun
 
-			if time_info.moring and sun < 0.9 and sun > 0.1 then
+			if time_info.moring and sun < 0.9 then
 				-- Start spawning beams for the day
 
-				local stage = sun * 10
+				local stage = getSunStage(time_info)
 
 
-				if global.last_sun_stage and global.last_sun_stage ~= stage then
-					global.last_sun_stage = stage
-					game.print("New sun stage " .. stage)
+				if (global.surfaces[sid].last_sun_stage ~= stage) then
 
-					local ttl = surface
 
-					if mid % 100 == 0 then
 
-						beam = mirror.surface.create_entity {
-							position = mirror.position,
-							name = control_util.mod_prefix .. "mirred-solar-beam",
-							raise_built = false,
-							target_position = { tower.position.x, tower.position.y - 13 },
-							source_position = mirror.position
-						}
-					else
-						beam = nil
+					local ttl = math.abs(data.surface.evening - data.surface.dawn) * data.surface.ticks_per_day
+
+					game.print("New sun stage " .. stage .. " with life of " .. ttl)
+					for mid, mirror in pairs(global.mirrors) do
+						-- Can only spawn sun rays on mirrors with towers
+						if global.mirror_tower[mid] then
+
+							local tower = global.mirror_tower[mid].tower
+
+							local group = mid % mirror_groups
+
+							if group <= stage and group > global.surfaces[sid].last_sun_stage then
+								-- If our group is valued at the current sun stage, fire our laser
+								generateBeam(mirror, tower, ttl)
+							elseif group > stage and global.mirror_tower[mid].beam then
+								-- handle sudden timeskips, mostly from my debugging time set commands
+								global.mirror_tower[mid].beam.destroy()
+							end
+						end
 					end
 
 
+					global.surfaces[sid].last_sun_stage = stage
+
 				end
 
-
 			end
+		end
 
 
-			--game.print("asdf")
+
+		--game.print("Ticked")
+
+		--game.print(serpent.block(global.surfaces))
+
+		if global.tower_mirrors ~= nil then
+			--surface.ticks_per_day = 25000
+			--game.print(sun)
+			--game.print("has towers")
+
+			--for i = 1, #entities do
+			--	game.print(serpent.block(entities[i]))
+			--end
+
+			for tid, mirrors in pairs(global.tower_mirrors) do
+				local tower = global.towers[tid]
+
+				--game.print(tower.position)
+
+				local surface = tower.surface
+
+				local time_info = calc_sun(surface)
+				local sun = time_info.sun
 
 
-			--	game.get_player(1).create_local_flying_text {
-			--		text = { tower.temperature },
-			--		position = { tower.position.x, tower.position.y - 0.5 },
-			--		color = nil,
-			--		time_to_live = 20,
-			--		speed = 1.0,
-			--	}
 
-			if sun > 0 and #mirrors > 0 then
 
-				tower.insert_fluid {
-					name = control_util.mod_prefix .. "solar-fluid",
-					amount = #mirrors * sun * fluidPerTickPerMirror * ticks
-				}
 
-			end
-			--for _, mirror in ipairs(mirrors) do
+				--game.print("asdf")
 
-			--game.get_player(1).create_local_flying_text {
-			--	text = { tower.unit_number },
-			--	position = tower.position,
-			--	color = nil,
-			--	time_to_live = 20,
-			--	speed = 1.0,
-			--}
-			for _, mirror in pairs(mirrors) do
-				rendering.draw_line {
-					surface = surface,
-					from = mirror.position,
-					to = tower.position,
-					color = { 1, 1, 0 },
-					width = 2,
-					time_to_live = ticks + 1,
-					only_in_alt_mode = true,
-					draw_on_ground = true
-				}
 
+				--	game.get_player(1).create_local_flying_text {
+				--		text = { tower.temperature },
+				--		position = { tower.position.x, tower.position.y - 0.5 },
+				--		color = nil,
+				--		time_to_live = 20,
+				--		speed = 1.0,
+				--	}
+
+				if sun > 0 and #mirrors > 0 then
+
+					tower.insert_fluid {
+						name = control_util.mod_prefix .. "solar-fluid",
+						amount = #mirrors * sun * fluidPerTickPerMirror * ticks
+					}
+
+				end
+
+				--for _, mirror in ipairs(mirrors) do
+
+				--game.get_player(1).create_local_flying_text {
+				--	text = { tower.unit_number },
+				--	position = tower.position,
+				--	color = nil,
+				--	time_to_live = 20,
+				--	speed = 1.0,
+				--}
+				for _, mirror in pairs(mirrors) do
+					rendering.draw_line {
+						surface = surface,
+						from = mirror.position,
+						to = tower.position,
+						color = { 1, 1, 0 },
+						width = 2,
+						time_to_live = ticks + 1,
+						only_in_alt_mode = true,
+						draw_on_ground = true
+					}
+
+				end
 			end
 
 			--tower.temperature = tower.temperature + surface.solar_power_multiplier * sun * tempPerTick / ticks
@@ -335,7 +397,7 @@ script.on_event(
 	},
 	function(event)
 
-		game.print("Somthing was built")
+		--game.print("Somthing was built")
 
 		if global.mirror_tower == nil then
 			buildTrees()
@@ -415,7 +477,7 @@ script.on_event(
 	},
 	function(event)
 
-		game.print("Somthing was removed")
+		--game.print("Somthing was removed")
 		if global.tower_mirrors == nil then
 			buildTrees()
 		end

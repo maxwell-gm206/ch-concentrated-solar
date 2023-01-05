@@ -42,10 +42,18 @@ data:extend {
 		corpse               = 'small-remnants',
 		collision_box        = { { -1.4, -1.4 }, { 1.4, 1.4 } },
 		selection_box        = { { -1.5, -1.5 }, { 1.5, 1.5 } },
-		folded_animation     = {
-			direction_count = 16,
-			filename = control_util.sprite(control_util.mod_prefix .. "heliostat-mirror-16.png"),
+
+		base_picture = {
+			filename = control_util.sprite(control_util.mod_prefix .. "heliostat-mirror-turret-base.png"),
 			size = 32 * 3,
+			direction_count = 1,
+			frame_count = 1,
+		},
+
+		folded_animation = {
+			direction_count = 16,
+			filename = control_util.sprite(control_util.mod_prefix .. "heliostat-mirror-turret-16.png"),
+			size = 32 * 4,
 			frame_count = 1,
 			line_length = 4
 			--north = {
