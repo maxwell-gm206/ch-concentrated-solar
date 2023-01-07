@@ -6,12 +6,28 @@ local shared_util = {}
 ---@field b number?
 ---@field a number?
 
+---@class BeamTarget
+---Table fields
+---@field entity LuaEntity?
+---The target entity.
+---@field position MapPosition?
+
 ---@class Vector
 ---@field x number?
 ---@field y number?
 
+---@class MapPosition
+---@field x number
+---@field y number
+
+---@class MirrorTower
+---@field mirror LuaEntity
+---@field tower LuaEntity
+
+
 ---@class LuaEntity
----@field unit_number number
+---@field unit_number integer
+---@field valid boolean
 ---@field position Vector
 ---@field surface LuaSurface
 ---@field name string
@@ -19,6 +35,19 @@ local shared_util = {}
 --- Insert fluid into this entity. Fluidbox is chosen automatically.
 ---@field insert_fluid fun(fluid: Fluid): number
 ---@field clear_fluid_inside fun()
+---Get the source of this beam.
+---@field get_beam_source fun() : BeamTarget?
+---Set the source of this beam.
+---@field set_beam_source fun(source)
+---Get the target of this beam.
+---@field get_beam_target fun() : BeamTarget?
+---Get the target of this beam.
+---@field set_beam_target fun(target)
+
+
+---@alias MirrorLuaEntity LuaEntity
+
+---@alias TowerLuaEntity LuaEntity
 
 
 ---@class Fluid
@@ -35,32 +64,42 @@ local shared_util = {}
 ---@field dawn number
 ---@field dusk number
 ---@field daytime number
----@field ticks_per_day number
+---@field ticks_per_day integer
 ---@field find_entities_filtered fun(filters:table): LuaEntity[]
 ---@field create_entity fun(params:table): LuaEntity
+
+---@class LuaPlayer
+---@field create_local_flying_text fun(args: table)
 
 
 ---@class LuaGameScript
 ---@field surfaces LuaSurface[]
 ---@field print string
----@field get_player fun(num: number)
+---@field get_player fun(num: integer): LuaPlayer
 
 ---@class LuaRendering
 ---@field draw_line fun(params: table)
 ---@field clear fun(mod:string)
 
+---@class LuaBootstrap
+
+
+
+
 ---@class BuildEvent
 ---@field entity LuaEntity
 ---@field name string
----@field tick number
+---@field tick integer
 
 ---@class Global
----@field mirror_tower {[number]: {beam:LuaEntity?, tower:LuaEntity, mirror:LuaEntity}}
----@field tower_mirrors {[number] : LuaEntity[]}
----@field mirrors {[number] : LuaEntity}
----@field towers {[number] : LuaEntity}
+---@field mirror_tower {[integer]: {beam:LuaEntity?, tower:LuaEntity, mirror:LuaEntity}?}
+---@field tower_mirrors {[integer] : LuaEntity[]?}
+---@field mirrors {[integer] : LuaEntity?}
+---@field towers {[integer] : LuaEntity?}
 ---@field surfaces table
 
+---@class Serpent
+---@field block fun(data:table):string
 
 ---@class Data
 ---@field extend fun(data:table, other:table)
@@ -70,6 +109,13 @@ data = data
 
 ---@type table
 defines = defines
+
+---@type Serpent
+serpent = serpent
+
+
+---@type fun(table): integer
+table_size = table_size
 
 shared_util.mod_prefix = "chcs-"
 shared_util.solar_power_tower = shared_util.mod_prefix .. "solar-power-tower"

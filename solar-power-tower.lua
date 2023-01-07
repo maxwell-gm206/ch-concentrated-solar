@@ -1,20 +1,20 @@
-control_util = require("data-util")
+local data_util = require("data-util")
 
 require("util")
 
 data:extend {
 	{
-		type         = "item",
-		name         = control_util.mod_prefix .. "solar-power-tower",
-		subgroup     = 'energy',
-		icon         = control_util.sprite "0002.png",
-		icon_size    = 32 * 3,
-		stack_size   = 10,
-		place_result = control_util.mod_prefix .. "solar-power-tower"
+		type = "item",
+		name = data_util.mod_prefix .. "solar-power-tower",
+		subgroup = 'energy',
+		icon = data_util.sprite "solar-power-tower-icon.png",
+		icon_size = 64, icon_mipmaps = 4,
+		stack_size = 10,
+		place_result = data_util.mod_prefix .. "solar-power-tower"
 	},
 	{
 		type = "recipe",
-		name = control_util.mod_prefix .. "solar-power-tower",
+		name = data_util.mod_prefix .. "solar-power-tower",
 		energy_required = 8,
 		enabled = true,
 		ingredients =
@@ -24,18 +24,18 @@ data:extend {
 			{ "advanced-circuit", 500 },
 			{ "copper-plate", 500 }
 		},
-		result = control_util.mod_prefix .. "solar-power-tower",
+		result = data_util.mod_prefix .. "solar-power-tower",
 		requester_paste_multiplier = 1
 	},
 	{
 		type = "reactor",
-		name = control_util.mod_prefix .. "solar-power-tower",
-		icon = "__base__/graphics/icons/nuclear-reactor.png",
+		name = data_util.mod_prefix .. "solar-power-tower",
+		icon = data_util.sprite "solar-power-tower-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
 		flags = { "placeable-neutral", "player-creation" },
-		minable = { mining_time = 0.5, result = control_util.mod_prefix .. "solar-power-tower" },
+		minable = { mining_time = 0.5, result = data_util.mod_prefix .. "solar-power-tower" },
 		max_health = 500,
-		corpse = "nuclear-reactor-remnants",
+		corpse = "medium-remnants",
 		dying_explosion = "nuclear-reactor-explosion",
 		consumption = "40MW",
 		neighbour_bonus = 0,
@@ -63,11 +63,12 @@ data:extend {
 			--fuel_category = control_util.mod_prefix .. "solar-energy",
 			--fuel_inventory_size = 1
 		},
-
 		collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } },
 		selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } },
+		drawing_box   = { { -2.5, -14.5 }, { 2.5, 2.5 } },
+
 		--damaged_trigger_effect = hit_effects.entity(),
-		lower_layer_picture =
+		lower_layer_picture      =
 		{
 			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes.png",
 			width = 156,
@@ -103,56 +104,56 @@ data:extend {
 			layers =
 			{
 				{
-					filename = control_util.sprite "solar-power-tower.png",
+					filename = data_util.sprite "solar-power-tower.png",
 					width = 32 * 5,
 					height = 32 * 17,
 					shift = { 0, -(17 / 2 - 2.5) },
-					hr_version =
-					{
-						filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor.png",
-						width = 302,
-						height = 318,
-						scale = 0.5,
-						shift = util.by_pixel(-5, -7)
-					}
+					--hr_version =
+					--{
+					--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor.png",
+					--	width = 302,
+					--	height = 318,
+					--	scale = 0.5,
+					--	shift = util.by_pixel(-5, -7)
+					--}
 				},
 				{
-					filename = control_util.sprite "solar-power-tower-shadow.png",
+					filename = data_util.sprite "solar-power-tower-shadow.png",
 					width = 32 * 15,
 					height = 32 * 5,
 					shift = { 5, 0 },
 					draw_as_shadow = true,
-					hr_version =
-					{
-						filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-shadow.png",
-						width = 525,
-						height = 323,
-						scale = 0.5,
-						shift = { 1.625, 0 },
-						draw_as_shadow = true
-					}
+					--hr_version =
+					--{
+					--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-shadow.png",
+					--	width = 525,
+					--	height = 323,
+					--	scale = 0.5,
+					--	shift = { 1.625, 0 },
+					--	draw_as_shadow = true
+					--}
 				}
 			}
 		},
 
 		working_light_picture =
 		{
-			filename = "__base__/graphics/entity/nuclear-reactor/reactor-lights-color.png",
+			filename = data_util.sprite "solar-power-tower-working.png",
 			blend_mode = "additive",
 			draw_as_glow = true,
-			width = 160,
-			height = 160,
-			shift = { -0.03125, -0.1875 },
-			hr_version =
-			{
-				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-lights-color.png",
-				blend_mode = "additive",
-				draw_as_glow = true,
-				width = 320,
-				height = 320,
-				scale = 0.5,
-				shift = { -0.03125, -0.1875 },
-			}
+			width = 32 * 4,
+			height = 32 * 4,
+			shift = { 0, -14 },
+			--hr_version =
+			--{
+			--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-lights-color.png",
+			--	blend_mode = "additive",
+			--	draw_as_glow = true,
+			--	width = 320,
+			--	height = 320,
+			--	scale = 0.5,
+			--	shift = { -0.03125, -0.1875 },
+			--}
 		},
 
 		--light = {intensity = 0.6, size = 9.9, shift = {0.0, 0.0}, color = {r = 0.0, g = 1.0, b = 0.0}},
@@ -219,7 +220,7 @@ data:extend {
 
 			heat_picture = apply_heat_pipe_glow
 			{
-				filename = control_util.sprite "solar-power-tower-heated.png",
+				filename = data_util.sprite "solar-power-tower-heated.png",
 				width = 32 * 5,
 				height = 32 * 17,
 				shift = { 0, -(17 / 2 - 2.5) },
