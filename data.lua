@@ -1,9 +1,10 @@
 --data.lua
 
-require("prototypes.solar-energy")
-require("prototypes.heliostat-mirror")
-require("prototypes.solar-power-tower")
-require("prototypes.solar-laser-tower")
+require "prototypes.solar-energy"
+require "prototypes.heliostat-mirror"
+require "prototypes.solar-power-tower"
+require "prototypes.solar-laser-tower"
+require "prototypes.technology"
 
 -- Increase entity size globally, to account for increased size on solar towers and shadows
 
