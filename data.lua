@@ -5,6 +5,8 @@ require "prototypes.heliostat-mirror"
 require "prototypes.solar-power-tower"
 require "prototypes.solar-laser-tower"
 require "prototypes.technology"
+require "prototypes.recipe"
+require "prototypes.item"
 
 -- Increase entity size globally, to account for increased size on solar towers and shadows
 

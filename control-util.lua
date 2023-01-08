@@ -109,8 +109,8 @@ end
 
 
 
----@param inputs {tower:LuaEntity, mirror:LuaEntity, ttl:number?, mirrored:boolean?}
----@return LuaEntity
+---@param inputs {tower:LuaEntity, mirror:LuaEntity, ttl:uint?, mirrored:boolean?, blend : number?}
+---@return LuaEntity?
 ---@nodiscard
 --- Create a beam from a `mirror` to a `tower`, lasting for `ttl`
 control_util.generateBeam = function(inputs)
@@ -122,22 +122,30 @@ control_util.generateBeam = function(inputs)
 		name = control_util.mod_prefix .. "solar-beam"
 	end
 
-	local target = control_util.towerTarget(inputs.tower)
+	local source = control_util.towerTarget(inputs.tower)
+	local target = inputs.mirror.position
+
+	target.y = target.y - 0.5
+	local blend = inputs.blend or 0.9
+	-- shift towards mirror a little
+	source.x = source.x * blend + target.x * (1 - blend)
+	source.y = source.y * blend + target.y * (1 - blend)
+
 
 	return inputs.mirror.surface.create_entity {
-		position = inputs.mirror.position,
+		position = target,
 		name = name,
 		raise_built = false,
 		duration = inputs.ttl or 0,
-		target_position = inputs.mirror.position,
-		source_position = control_util.towerTarget(inputs.tower)
+		target_position = target,
+		source_position = source
 	}
 end
 
 ---@param tower LuaEntity
----@return Vector
+---@return MapPosition
 control_util.towerTarget = function(tower)
-	return { tower.position.x, tower.position.y - 13 }
+	return { x = tower.position.x, y = tower.position.y - 13 }
 end
 
 ---@param inputs {towers:LuaEntity[], position:Vector, ignore_id : number?}

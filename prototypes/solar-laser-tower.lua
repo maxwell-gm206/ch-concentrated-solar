@@ -60,30 +60,8 @@ local function solar_laser_turret_shooting()
 end
 
 data:extend {
-	{
-		type = "item",
-		name = data_util.mod_prefix .. "solar-laser-tower",
-		subgroup = 'energy',
-		icon = data_util.sprite "solar-laser-tower-icon.png",
-		icon_size = 64, icon_mipmaps = 4,
-		stack_size = 10,
-		place_result = data_util.mod_prefix .. "solar-laser-tower"
-	},
-	{
-		type = "recipe",
-		name = data_util.mod_prefix .. "solar-laser-tower",
-		energy_required = 8,
-		enabled = false,
-		ingredients =
-		{
-			{ "concrete", 500 },
-			{ "steel-plate", 500 },
-			{ "advanced-circuit", 500 },
-			{ "copper-plate", 500 }
-		},
-		result = data_util.mod_prefix .. "solar-laser-tower",
-		requester_paste_multiplier = 1
-	},
+
+
 
 	{
 		type = "fluid-turret",
@@ -98,13 +76,14 @@ data:extend {
 		selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } },
 		drawing_box = { { -2.5, -14.5 }, { 2.5, 2.5 } },
 		damaged_trigger_effect = hit_effects.entity(),
-		rotation_speed = 0.1,
-		preparing_speed = 0.1,
+		rotation_speed = 0.01,
+		preparing_speed = 0.05,
+		folding_speed = 0.05,
 		preparing_sound = sounds.laser_turret_activate,
 		folding_sound = sounds.laser_turret_deactivate,
 		corpse = "medium-remnants",
 		dying_explosion = "laser-turret-explosion",
-		folding_speed = 0.1,
+
 
 		fluid_box =
 		{

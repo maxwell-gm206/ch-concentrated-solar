@@ -1,15 +1,6 @@
 local data_util = require("data-util")
 
 data:extend {
-	{
-		type = "item",
-		name = data_util.mod_prefix .. "heliostat-mirror",
-		subgroup = 'energy',
-		icon = data_util.sprite "heliostat-mirror-icon.png",
-		icon_size = 64, icon_mipmaps = 4,
-		stack_size = 10,
-		place_result = data_util.mod_prefix .. "heliostat-mirror"
-	},
 
 	{
 		type  = "turret",
@@ -20,7 +11,7 @@ data:extend {
 		icon_size = 64, icon_mipmaps = 4,
 
 		--show_recipe_icon = false,
-
+		is_military_target   = false,
 		call_for_help_radius = 0,
 		attack_parameters    = {
 			type      = "beam",
@@ -85,18 +76,6 @@ data:extend {
 			}
 		},
 	},
-	{
-		type = "recipe",
-		name = data_util.mod_prefix .. "heliostat-mirror",
-		energy_required = 10,
-		enabled = true,
-		ingredients =
-		{
-			{ "steel-plate", 5 },
-			{ "electronic-circuit", 15 },
-			{ "copper-plate", 5 }
-		},
-		result = data_util.mod_prefix .. "heliostat-mirror"
-	}
+
 
 }

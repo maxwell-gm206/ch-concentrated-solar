@@ -209,7 +209,7 @@ script.on_event(
 		--create new boxes?
 		if player.selected and control_util.isTower(player.selected.name)
 			and global.tower_mirrors[player.selected.unit_number] then
-			b = {}
+			local b = {}
 
 			for i, mirror in pairs(global.tower_mirrors[player.selected.unit_number]) do
 
@@ -267,7 +267,8 @@ script.on_event(
 					tower = tower,
 					mirror = target,
 					ttl = control_util.solar_laser_ticks_between_shots - 1,
-					mirrored = false
+					mirrored = false,
+					blend = 1,
 				}
 				beam.set_beam_target(target)
 			else
@@ -367,22 +368,21 @@ script.on_event(
 --)
 
 --- APPLY FILTERS
+do
+	local filters = {
+		{ filter = "name", name = control_util.heliostat_mirror },
+	}
 
-filters = {
-	{ filter = "name", name = control_util.heliostat_mirror },
-}
-
-for tower, is in pairs(is_tower) do
-	if is then
-		table.insert(filters, { filter = "name", name = tower })
+	for tower, is in pairs(is_tower) do
+		if is then
+			table.insert(filters, { filter = "name", name = tower })
+		end
 	end
+
+	script.set_event_filter(defines.events.on_built_entity, filters)
+	script.set_event_filter(defines.events.on_robot_built_entity, filters)
+	script.set_event_filter(defines.events.on_robot_pre_mined, filters)
+	script.set_event_filter(defines.events.on_pre_player_mined_item, filters)
+	script.set_event_filter(defines.events.on_entity_damaged, filters)
 end
-
-script.set_event_filter(defines.events.on_built_entity, filters)
-script.set_event_filter(defines.events.on_robot_built_entity, filters)
-script.set_event_filter(defines.events.on_robot_pre_mined, filters)
-script.set_event_filter(defines.events.on_pre_player_mined_item, filters)
-
-script.set_event_filter(defines.events.on_entity_damaged, filters)
-
 rendering.clear("ch-concentrated-solar")

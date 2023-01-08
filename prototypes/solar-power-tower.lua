@@ -6,30 +6,7 @@ require("util")
 
 
 data:extend {
-	{
-		type = "item",
-		name = data_util.mod_prefix .. "solar-power-tower",
-		subgroup = 'energy',
-		icon = data_util.sprite "solar-power-tower-icon.png",
-		icon_size = 64, icon_mipmaps = 4,
-		stack_size = 10,
-		place_result = data_util.mod_prefix .. "solar-power-tower"
-	},
-	{
-		type = "recipe",
-		name = data_util.mod_prefix .. "solar-power-tower",
-		energy_required = 8,
-		enabled = false,
-		ingredients =
-		{
-			{ "concrete", 500 },
-			{ "steel-plate", 500 },
-			{ "advanced-circuit", 500 },
-			{ "copper-plate", 500 }
-		},
-		result = data_util.mod_prefix .. "solar-power-tower",
-		requester_paste_multiplier = 1
-	},
+
 	{
 		type = "reactor",
 		name = data_util.mod_prefix .. "solar-power-tower",
