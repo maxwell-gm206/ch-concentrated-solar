@@ -70,7 +70,7 @@ data:extend {
 		icon = data_util.sprite "solar-laser-tower-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
 		flags = { "placeable-player", "placeable-enemy", "player-creation" },
-		minable = { mining_time = 0.5, result = data_util.mod_prefix .. "solar-laser-tower" },
+		minable = { mining_time = 1, result = data_util.mod_prefix .. "solar-laser-tower" },
 		max_health = 1000,
 		collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } },
 		selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } },

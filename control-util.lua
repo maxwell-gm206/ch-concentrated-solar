@@ -175,11 +175,12 @@ end
 ---@return LuaEntity[]
 ---@nodiscard
 control_util.find_towers_around_entity = function(inputs)
+	local r = inputs.radius or control_util.tower_capture_radius
 	return inputs.entity.surface.find_entities_filtered {
 		name = tower_names,
-		position = inputs.entity.position,
 		force = inputs.entity.force,
-		radius = inputs.radius or control_util.tower_capture_radius
+		area = { { inputs.entity.position.x - r, inputs.entity.position.y - r },
+			{ inputs.entity.position.x + r, inputs.entity.position.y + r } }
 	}
 end
 
@@ -187,11 +188,12 @@ end
 ---@return LuaEntity[]
 ---@nodiscard
 control_util.find_mirrors_around_entity = function(inputs)
+	local r = inputs.radius or control_util.tower_capture_radius
 	return inputs.entity.surface.find_entities_filtered {
 		name = control_util.heliostat_mirror,
-		position = inputs.entity.position,
 		force = inputs.entity.force,
-		radius = inputs.radius or control_util.tower_capture_radius
+		area = { { inputs.entity.position.x - r, inputs.entity.position.y - r },
+			{ inputs.entity.position.x + r, inputs.entity.position.y + r } }
 	}
 end
 

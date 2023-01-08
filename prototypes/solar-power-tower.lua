@@ -13,7 +13,7 @@ data:extend {
 		icon = data_util.sprite "solar-power-tower-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
 		flags = { "placeable-neutral", "player-creation" },
-		minable = { mining_time = 3, result = data_util.mod_prefix .. "solar-power-tower" },
+		minable = { mining_time = 1, result = data_util.mod_prefix .. "solar-power-tower" },
 		max_health = 500,
 		corpse = "medium-remnants",
 		dying_explosion = "nuclear-reactor-explosion",
