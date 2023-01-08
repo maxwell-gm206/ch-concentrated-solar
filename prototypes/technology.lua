@@ -1,4 +1,4 @@
-data_util = require "data-util"
+local data_util = require "data-util"
 
 data:extend {
 

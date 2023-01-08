@@ -23,6 +23,7 @@ data:extend {
 			mining_time = 0.5,
 			result      = data_util.mod_prefix .. 'heliostat-mirror'
 		},
+		friendly_map_color   = data.raw["utility-constants"]["default"].chart.default_friendly_color_by_type["solar-panel"],
 		max_health           = 150,
 		corpse               = 'medium-small-remnants',
 		collision_box        = { { -1.1, -1.1 }, { 1.2, 1.2 } },

@@ -25,8 +25,9 @@ control_util.isTower = function(name)
 	return is_tower[name] ~= nil
 end
 
+-- Manhattan distance, to allow placement in grids
 control_util.dist_sqr = function(p1, p2)
-	return (p1.x - p2.x) ^ 2 + (p1.y - p2.y) ^ 2
+	return math.min((p1.x - p2.x) ^ 2, (p1.y - p2.y) ^ 2)
 end
 
 ---@nodiscard
