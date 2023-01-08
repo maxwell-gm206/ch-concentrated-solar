@@ -1,6 +1,9 @@
 local data_util = require("data-util")
 
+local hit_effects = require("__base__.prototypes.entity.hit-effects")
+
 require("util")
+
 
 data:extend {
 	{
@@ -16,7 +19,7 @@ data:extend {
 		type = "recipe",
 		name = data_util.mod_prefix .. "solar-power-tower",
 		energy_required = 8,
-		enabled = true,
+		enabled = false,
 		ingredients =
 		{
 			{ "concrete", 500 },
@@ -33,71 +36,56 @@ data:extend {
 		icon = data_util.sprite "solar-power-tower-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
 		flags = { "placeable-neutral", "player-creation" },
-		minable = { mining_time = 0.5, result = data_util.mod_prefix .. "solar-power-tower" },
+		minable = { mining_time = 3, result = data_util.mod_prefix .. "solar-power-tower" },
 		max_health = 500,
 		corpse = "medium-remnants",
 		dying_explosion = "nuclear-reactor-explosion",
-		consumption = "40MW",
+
+		--- ENERGY
+
+
+		consumption = data_util.solar_max_production_kw / 1000 .. "MW",
+		scale_energy_usage = true,
 		neighbour_bonus = 0,
-		--energy_source =
-		--{
-		--	type = "burner",
-		--	fuel_category = control_util.mod_prefix .. "solar-energy",
-		--	fuel_inventory_size = 1
-		--},
 
 		energy_source =
 		{
 
 			type = "fluid",
 			fluid_box = {
-				base_area        = 10,
-				height           = 2,
-				pipe_connections = {},
-				production_type  = "input",
-				filter           = data_util.mod_prefix .. "solar-fluid"
+				base_area           = 10,
+				pipe_connections    = {},
+				production_type     = "input",
+				minimum_temperature = 100.0,
+				maximum_temperature = data_util.solar_max_temp,
+				filter              = data_util.mod_prefix .. "solar-fluid"
 			},
-			destroy_non_fuel_fluid = true,
-			burns_fluid = true,
-			--scale_fluid_usage = true,
+			--destroy_non_fuel_fluid = true,
+			burns_fluid = false,
+			scale_fluid_usage = true,
+			fluid_usage_per_tick = data_util.solar_max_consumption / 60,
+			maximum_temperature = data_util.solar_max_temp,
 			--fuel_category = control_util.mod_prefix .. "solar-energy",
 			--fuel_inventory_size = 1
+
+			-- Lights are banned
+			light_flicker = {
+				minimum_intensity = 0,
+				maximum_intensity = 0,
+				derivation_change_frequency = 0,
+				derivation_change_deviation = 0,
+				minimum_light_size = 0,
+				light_intensity_to_size_coefficient = 0,
+				color = { 0, 0, 0 }
+			}
 		},
 		collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } },
 		selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } },
 		drawing_box   = { { -2.5, -14.5 }, { 2.5, 2.5 } },
 
-		--damaged_trigger_effect = hit_effects.entity(),
-		lower_layer_picture      =
-		{
-			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes.png",
-			width = 156,
-			height = 156,
-			shift = util.by_pixel(-2, -4),
-			hr_version =
-			{
-				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes.png",
-				width = 320,
-				height = 316,
-				scale = 0.5,
-				shift = util.by_pixel(-1, -5)
-			}
-		},
-		heat_lower_layer_picture = apply_heat_pipe_glow
-		{
-			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes-heated.png",
-			width = 156,
-			height = 156,
-			shift = util.by_pixel(-3, -4),
-			hr_version =
-			{
-				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes-heated.png",
-				width = 320,
-				height = 316,
-				scale = 0.5,
-				shift = util.by_pixel(-0.5, -4.5)
-			}
-		},
+		damaged_trigger_effect = hit_effects.entity(),
+
+		--- GRAPHICS
 
 		picture =
 		{
@@ -143,7 +131,8 @@ data:extend {
 			draw_as_glow = true,
 			width = 32 * 4,
 			height = 32 * 4,
-			shift = { 0, -14 },
+			shift = { 0, -12.35 },
+			-- TODO:
 			--hr_version =
 			--{
 			--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-lights-color.png",
@@ -155,15 +144,16 @@ data:extend {
 			--	shift = { -0.03125, -0.1875 },
 			--}
 		},
+		-- add a light to smooth out the effects of all the incoming beams
+		light = { intensity = 0.6, size = 9.9, shift = { 0.0, -12.35 } },
 
-		--light = {intensity = 0.6, size = 9.9, shift = {0.0, 0.0}, color = {r = 0.0, g = 1.0, b = 0.0}},
 		-- use_fuel_glow_color = false, -- should use glow color from fuel item prototype as light color and tint for working_light_picture
 		-- default_fuel_glow_color = { 0, 1, 0, 1 } -- color used as working_light_picture tint for fuels that don't have glow color defined
 
 		heat_buffer =
 		{
-			max_temperature = 700,
-			specific_heat = "50MJ",
+			max_temperature = data_util.solar_max_temp,
+			specific_heat = "500KJ",
 			max_transfer = "10GW",
 			minimum_glow_temperature = 350,
 			connections =
@@ -224,17 +214,51 @@ data:extend {
 				width = 32 * 5,
 				height = 32 * 17,
 				shift = { 0, -(17 / 2 - 2.5) },
-				hr_version =
-				{
-					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-heated.png",
-					width = 216,
-					height = 256,
-					scale = 0.5,
-					shift = util.by_pixel(3, -6.5)
-				}
+				-- TODO:
+				--hr_version =
+				--{
+				--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-heated.png",
+				--	width = 216,
+				--	height = 256,
+				--	scale = 0.5,
+				--	shift = util.by_pixel(3, -6.5)
+				--}
 			},
 		},
 
+		--- HEAT PIPE CONNECTION TEXTURES
+		lower_layer_picture =
+		{
+			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes.png",
+			width = 156,
+			height = 156,
+			shift = util.by_pixel(-2, -4),
+			hr_version =
+			{
+				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes.png",
+				width = 320,
+				height = 316,
+				scale = 0.5,
+				shift = util.by_pixel(-1, -5)
+			}
+		},
+
+
+		heat_lower_layer_picture = apply_heat_pipe_glow
+		{
+			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes-heated.png",
+			width = 156,
+			height = 156,
+			shift = util.by_pixel(-3, -4),
+			hr_version =
+			{
+				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes-heated.png",
+				width = 320,
+				height = 316,
+				scale = 0.5,
+				shift = util.by_pixel(-0.5, -4.5)
+			}
+		},
 		connection_patches_connected =
 		{
 			sheet =

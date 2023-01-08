@@ -19,7 +19,7 @@ data:extend {
 		icon = data_util.sprite "heliostat-mirror-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
 
-		show_recipe_icon = false,
+		--show_recipe_icon = false,
 
 		call_for_help_radius = 0,
 		attack_parameters    = {

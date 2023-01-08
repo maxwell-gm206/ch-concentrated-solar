@@ -32,10 +32,13 @@ data:extend {
 		name = data_util.mod_prefix .. "solar-fluid",
 		hidden = true,
 		auto_barrel = false,
-		base_color = { 0, 0, 0 },
-		flow_color = { 0, 0, 0 },
-		default_temperature = 40,
-		fuel_value = "1MJ"
+		base_color = { 1, 1, 0.2 },
+		flow_color = { 1, 1, 0.2 },
+		-- default temprature 0 makes energy calculations very simple
+		-- energy from x degrees of solar fluid becomes x * data_util.solar_heat_capacity_kj
+		default_temperature = 0,
+		max_temperature = data_util.solar_max_temp,
+		heat_capacity = data_util.solar_heat_capacity_kj .. "KJ"
 	},
 	{
 
