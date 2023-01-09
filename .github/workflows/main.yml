@@ -13,7 +13,7 @@ jobs:
         # Filename for archive
         filename: 'ch-concentrated-solar_0.1.0.zip' # default is release.zip
         # Base path for archive files
-        # path: 0 # optional, default is .
+        path: 'ch-concentrated-solar/' # optional, default is .
         # Working directory before zipping
         # directory: . # optional, default is .
         # List of excluded files / directories
