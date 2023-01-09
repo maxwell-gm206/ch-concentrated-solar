@@ -60,9 +60,6 @@ local function solar_laser_turret_shooting()
 end
 
 data:extend {
-
-
-
 	{
 		type = "fluid-turret",
 
@@ -71,7 +68,7 @@ data:extend {
 		icon_size = 64, icon_mipmaps = 4,
 		flags = { "placeable-player", "placeable-enemy", "player-creation" },
 		minable = { mining_time = 1, result = data_util.mod_prefix .. "solar-laser-tower" },
-		max_health = 1000,
+		max_health = 4000,
 		collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } },
 		selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } },
 		drawing_box = { { -2.5, -14.5 }, { 2.5, 2.5 } },
@@ -87,14 +84,15 @@ data:extend {
 
 		fluid_box =
 		{
-			base_area        = 100,
+			base_area        = data_util.solar_max_temp,
+			height           = 0.01,
 			pipe_connections = {},
 			production_type  = "input",
 			filter           = data_util.mod_prefix .. "solar-fluid"
 		},
-		fluid_buffer_input_flow = 100,
-		activation_buffer_ratio = 0.5,
-		fluid_buffer_size = 100,
+		fluid_buffer_input_flow = data_util.solar_max_temp,
+		activation_buffer_ratio = 1 / 6,
+		fluid_buffer_size = data_util.solar_max_temp,
 
 		attack_parameters =
 		{
@@ -105,6 +103,7 @@ data:extend {
 			cooldown = data_util.solar_laser_ticks_between_shots - 10,
 			range = 50,
 			min_range = 6,
+			turn_range = 1.5 / 3.0,
 			--source_direction_count = 64,
 			--source_offset = { 0, -3.423489 / 4 },
 			damage_modifier = 1,
@@ -136,7 +135,7 @@ data:extend {
 							{
 								type = "damage",
 								damage = {
-									amount = 5,
+									amount = 500,
 									type = "laser"
 								}
 							}

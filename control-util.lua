@@ -25,9 +25,9 @@ control_util.isTower = function(name)
 	return is_tower[name] ~= nil
 end
 
--- Manhattan distance, to allow placement in grids
+
 control_util.dist_sqr = function(p1, p2)
-	return math.min((p1.x - p2.x) ^ 2, (p1.y - p2.y) ^ 2)
+	return (p1.x - p2.x) ^ 2 + (p1.y - p2.y) ^ 2
 end
 
 ---@nodiscard
@@ -54,11 +54,14 @@ end
 control_util.getTowerForMirror = function(mirror)
 
 	if global.mirror_tower[mirror.unit_number] then
-		return global.mirror_tower[mirror.unit_number].tower
-	else
-		return nil
+		local tower = global.mirror_tower[mirror.unit_number].tower
+
+		if tower and tower.valid then
+			return tower
+		end
 	end
 
+	return nil
 end
 
 ---@param mirror LuaEntity
@@ -87,7 +90,8 @@ control_util.linkMirrorToTowerIfCloser = function(inputs)
 
 	local tower = control_util.getTowerForMirror(inputs.mirror)
 
-	if tower then
+	if tower and tower.valid then
+
 		local curDist = control_util.dist_sqr(inputs.mirror.position, tower.position)
 
 		local newDist = control_util.dist_sqr(inputs.mirror.position, inputs.tower.position)
@@ -341,7 +345,7 @@ control_util.buildTrees = function()
 			for _, tower in pairs(towers) do
 
 				-- Mark each tower as new
-				control_util.on_built_entity_callback(tower)
+				control_util.on_built_entity_callback(tower, game.tick + 1)
 
 			end
 		end
@@ -356,17 +360,14 @@ end
 ---@param args {tower:LuaEntity?, tid : number? , mirror:LuaEntity, clearTowerMirrorsRelation:boolean?}
 control_util.removeMirrorFromTower = function(args)
 	-- unpack and verify arguments
-	local tid = args.tid
-	if args.tower then
-		tid = args.tower.unit_number
-	end
+	local tid = args.tid or args.tower.unit_number
 
 	local mirror = args.mirror
 
 	assert(tid ~= nil)
 	assert(mirror ~= nil)
-	assert(global.mirror_tower[mirror.unit_number].tower.unit_number == tid,
-		"Mirror not connected to tower in mirrors->tower")
+	--assert(global.mirror_tower[mirror.unit_number].tower.unit_number == tid,
+	--"Mirror not connected to tower in mirrors->tower")
 
 	--game.print("removing mirror ")
 
@@ -473,12 +474,15 @@ control_util.notify_tower_invalid = function(tid)
 	-- Remove every tower -> mirror relation, return to consistency
 	global.tower_mirrors[tid] = nil
 
+	control_util.on_tower_count_changed()
 end
 
 ---@param entity LuaEntity
-control_util.on_built_entity_callback = function(entity)
+---@param tick uint
+control_util.on_built_entity_callback = function(entity, tick)
 
-	assert(entity ~= nil, "Called back with nil entity")
+	assert(entity, "Called back with nil entity")
+	assert(tick, "Called back with nil tick")
 
 	--game.print("Somthing was built")
 
@@ -532,15 +536,34 @@ control_util.on_built_entity_callback = function(entity)
 			end
 
 
-
+			control_util.on_tower_count_changed()
 		end
 	end
 
 	--control_util.consistencyCheck()
 end
 
-control_util.fluid_ticks = 60
-control_util.sun_ticks = 600
+control_util.on_tower_count_changed = function()
+	global.tower_update_count = math.ceil(table_size(global.tower_mirrors) * control_util.tower_update_fraction)
+	global.tower_beam_update_count = math.ceil(table_size(global.tower_mirrors) * control_util.beam_update_fraction)
+
+	print(table_size(global.tower_mirrors) .. " " .. global.tower_update_count)
+end
+
+control_util.update_settings = function()
+	control_util.tower_update_interval = settings.global["tower-update-interval"].value
+	control_util.tower_full_update_time = settings.global["full-tower-update-time"].value
+	control_util.beam_update_interval = settings.global["beam-update-interval"].value
+	control_util.beam_full_update_time = settings.global["full-beam-update-time"].value
+
+	control_util.tower_update_fraction = control_util.tower_update_interval / control_util.tower_full_update_time
+	control_util.beam_update_fraction = control_util.beam_update_interval / control_util.beam_full_update_time
+
+
+end
+
+control_util.update_settings()
+
 local mirror_kw = 100
 control_util.fluidPerTickPerMirror = mirror_kw / control_util.solar_heat_capacity_kj / 60
 control_util.fluidTempPerMirror = mirror_kw / control_util.solar_heat_capacity_kj

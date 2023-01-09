@@ -3,8 +3,8 @@ data:extend {
 	{
 		type = "recipe",
 		name = data_util.mod_prefix .. "heliostat-mirror",
-		energy_required = 10,
-		enabled = true,
+		energy_required = 5,
+		enabled = false,
 		ingredients =
 		{
 			{ "steel-plate", 5 },
@@ -27,7 +27,6 @@ data:extend {
 		result = data_util.mod_prefix .. "solar-laser-tower",
 		requester_paste_multiplier = 1
 	},
-
 	{
 		type = "recipe",
 		name = data_util.mod_prefix .. "solar-power-tower",

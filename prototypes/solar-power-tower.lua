@@ -30,7 +30,8 @@ data:extend {
 
 			type = "fluid",
 			fluid_box = {
-				base_area           = 10,
+				base_area           = data_util.solar_max_temp,
+				height              = 0.01,
 				pipe_connections    = {},
 				production_type     = "input",
 				minimum_temperature = 100.0,
