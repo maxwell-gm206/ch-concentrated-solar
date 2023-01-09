@@ -451,7 +451,7 @@ control_util.notify_tower_invalid = function(tid)
 
 		for mid, mirror in pairs(global.tower_mirrors[tid]) do
 
-			if global.mirror_tower[mid].in_range then
+			if global.mirror_tower[mid] and global.mirror_tower[mid].in_range then
 				local tower = control_util.closestTower {
 					towers = global.mirror_tower[mid].in_range,
 					position = mirror.position,
@@ -473,6 +473,16 @@ control_util.notify_tower_invalid = function(tid)
 	global.towers[tid] = nil
 	-- Remove every tower -> mirror relation, return to consistency
 	global.tower_mirrors[tid] = nil
+
+
+	-- Fixes issue when last updated tower has just been destroyed
+	-- "invalid key to next"
+	if global.last_updated_tower == tid then
+		global.last_updated_tower = 0
+	end
+	if global.last_updated_tower_beam == tid then
+		global.last_updated_tower_beam = 0
+	end
 
 	control_util.on_tower_count_changed()
 end

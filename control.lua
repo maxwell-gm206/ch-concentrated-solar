@@ -17,6 +17,7 @@ local function on_nth_tick_beam_update(event)
 	--control_util.delete_all_beams()
 
 
+
 	for i = 1, global.tower_beam_update_count or 1, 1 do
 
 		global.last_updated_tower_beam = next(global.tower_mirrors, global.last_updated_tower_beam)
@@ -25,7 +26,7 @@ local function on_nth_tick_beam_update(event)
 			local tower = global.towers[global.last_updated_tower_beam]
 			local sid = tower.surface.index
 
-			--print("Generating beams around " .. global.last_updated_tower_beam)
+			print("Generating beams around " .. global.last_updated_tower_beam)
 
 			--log("Generating beams on " .. data.surface.name)
 
@@ -90,16 +91,18 @@ local function on_nth_tick_tower_update(event)
 
 	-- Place fluid in towers
 
+
+
 	for i = 1, global.tower_update_count or 1, 1 do
 
-		global.last_updated_tower_beam = next(global.tower_mirrors, global.last_updated_tower_beam)
+		global.last_updated_tower = next(global.tower_mirrors, global.last_updated_tower)
 
-		if global.last_updated_tower_beam then
-			local tid = global.last_updated_tower_beam
+		if global.last_updated_tower then
+			local tid = global.last_updated_tower
 			local mirrors = global.tower_mirrors[tid]
 
 
-			--print("Updating tower " .. tid)
+			print("Updating tower " .. tid)
 
 			local tower = global.towers[tid]
 
@@ -357,7 +360,7 @@ script.on_event(
 			--game.print("Removing mirror")
 
 			-- if this mirror is connected to a tower
-			if global.mirror_tower[entity.unit_number] then
+			if global.mirror_tower[entity.unit_number] and global.mirror_tower[entity.unit_number].tower then
 				-- remove this mirror from our tower's list
 				-- and remove the reference from this mirror to the tower
 
