@@ -6,15 +6,15 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - id: set_var
-        run: |
-          content= cat info.json
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          # end of optional handling for multi line json
-          echo "::set-output name=packageJson::$content"
-      - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"
+      run: |
+        content= cat info.json
+        content="${content//'%'/'%25'}"
+        content="${content//$'\n'/'%0A'}"
+        content="${content//$'\r'/'%0D'}"
+        # end of optional handling for multi line json
+        echo "::set-output name=packageJson::$content"
+    - run: |
+        echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"
     - name: Zip Release
       # You may pin to the exact commit or the version.
       # uses: TheDoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657
