@@ -21,7 +21,7 @@ jobs:
       uses: TheDoctor0/zip-release@0.6.2
       with:
         # Filename for archive
-        filename: 'ch-concentrated-solar_0.1.1.zip' # default is release.zip
+        filename: 'ch-concentrated-solar_${{fromJson(steps.set_var.outputs.packageJson).version}}.zip' # default is release.zip
         # Base path for archive files
         path: 'ch-concentrated-solar/' # optional, default is .
         # Working directory before zipping
@@ -35,7 +35,7 @@ jobs:
     - name: Upload Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "ch-concentrated-solar_0.1.1.zip"
+        artifacts: "ch-concentrated-solar_${{fromJson(steps.set_var.outputs.packageJson).version}}.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
         allowUpdates: true
         tag: "dev"
