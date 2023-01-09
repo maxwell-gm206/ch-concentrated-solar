@@ -17,8 +17,13 @@ jobs:
         # Working directory before zipping
         # directory: . # optional, default is .
         # List of excluded files / directories
-        exclusions: 'not_included/* *.git*' # optional, default is 
+        exclusions: 'not_included/* *.git* .github/*' # optional, default is 
         # List of excluded files / directories with recursive wildcards (only applies on Windows with `zip` type)
         # recursive_exclusions: # optional, default is 
         # Tool to use for archiving
         # type: # optional, default is zip
+    - name: Upload Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "ch-concentrated-solar_0.1.0.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
