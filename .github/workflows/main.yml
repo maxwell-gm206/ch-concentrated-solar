@@ -25,7 +25,7 @@ jobs:
         # Working directory before zipping
         directory: '..' # optional, default is .
         # List of excluded files / directories
-        exclusions: 'non_mod/* *.git* .github/*' # optional, default is 
+        exclusions: ch-concentrated-solar/non_mod/* *.git* .github/* # optional, default is 
         # List of excluded files / directories with recursive wildcards (only applies on Windows with `zip` type)
         # recursive_exclusions: # optional, default is 
         # Tool to use for archiving
