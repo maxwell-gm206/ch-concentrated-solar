@@ -71,19 +71,11 @@ data:extend {
 		{
 			layers =
 			{
-				{
-					filename = data_util.sprite "solar-power-tower.png",
+				data_util.auto_hr {
+					filename = "solar-power-tower",
 					width = 32 * tower_size.x,
 					height = 32 * tower_size.y,
 					shift = tower_shift,
-					hr_version =
-					{
-						filename = data_util.sprite "solar-power-tower-hr.png",
-						width = 64 * tower_size.x,
-						height = 64 * tower_size.y,
-						shift = tower_shift,
-						scale = 0.5,
-					}
 				},
 				{
 					filename = data_util.sprite "solar-power-tower-shadow.png",
@@ -104,24 +96,13 @@ data:extend {
 			}
 		},
 
-		working_light_picture =
-		{
-			filename = data_util.sprite "solar-power-tower-working.png",
+		working_light_picture = data_util.auto_hr {
+			filename = "solar-power-tower-working",
 			blend_mode = "additive",
 			draw_as_glow = true,
 			width = 32 * 4,
 			height = 32 * 4,
 			shift = { 0, -12.35 },
-			hr_version =
-			{
-				filename = data_util.sprite "solar-power-tower-working-hr.png",
-				blend_mode = "additive",
-				draw_as_glow = true,
-				width = 64 * 4,
-				height = 64 * 4,
-				shift = { 0, -12.35 },
-				scale = 0.5
-			}
 		},
 		-- add a light to smooth out the effects of all the incoming beams
 		light = { intensity = 0.6, size = 9.9, shift = { 0.0, -12.35 } },
@@ -187,21 +168,13 @@ data:extend {
 				}
 			},
 
-			heat_picture = apply_heat_pipe_glow
-			{
-				filename = data_util.sprite "solar-power-tower-heated.png",
-				width = 32 * tower_size.x,
-				height = 32 * tower_size.y,
-				shift = tower_shift,
-				hr_version =
+			heat_picture = apply_heat_pipe_glow(data_util.auto_hr
 				{
-					filename = data_util.sprite "solar-power-tower-heated-hr.png",
-					width = 64 * tower_size.x,
-					height = 64 * tower_size.y,
+					filename = "solar-power-tower-heated",
+					width = 32 * tower_size.x,
+					height = 32 * tower_size.y,
 					shift = tower_shift,
-					scale = 0.5
-				}
-			},
+				}),
 		},
 
 		--- HEAT PIPE CONNECTION TEXTURES

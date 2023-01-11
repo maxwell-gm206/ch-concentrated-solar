@@ -193,25 +193,14 @@ data:extend {
 		{
 			layers =
 			{
-				{
-					filename = data_util.sprite "solar-laser-tower.png",
+				data_util.auto_hr {
+					filename = "solar-laser-tower",
 					width = 32 * tower_base_size.x,
 					height = 32 * tower_base_size.y,
 					shift = tower_base_shift,
 					priority = "high",
 					direction_count = 1,
 					frame_count = 1,
-					hr_version =
-					{
-						filename = data_util.sprite "solar-laser-tower-hr.png",
-						width = 64 * tower_base_size.x,
-						height = 64 * tower_base_size.y,
-						shift = tower_base_shift,
-						priority = "high",
-						direction_count = 1,
-						frame_count = 1,
-						scale = 0.5
-					}
 				},
 				{
 					filename = data_util.sprite "solar-laser-tower-shadow.png",
@@ -235,8 +224,8 @@ data:extend {
 					--	scale = 0.5
 					--}
 				},
-				{
-					filename = data_util.sprite "solar-laser-tower-mask.png",
+				data_util.auto_hr {
+					filename = "solar-laser-tower-mask",
 					width = 32 * tower_base_size.x,
 					height = 32 * tower_base_size.y,
 					shift = tower_base_shift,
@@ -246,20 +235,6 @@ data:extend {
 					apply_runtime_tint = true,
 					direction_count = 1,
 					frame_count = 1,
-					hr_version =
-					{
-						filename = data_util.sprite "solar-laser-tower-mask-hr.png",
-						width = 64 * tower_base_size.x,
-						height = 64 * tower_base_size.y,
-						shift = tower_base_shift,
-						flags = { "mask" },
-						priority = "high",
-						axially_symmetrical = false,
-						apply_runtime_tint = true,
-						direction_count = 1,
-						frame_count = 1,
-						scale = 0.5,
-					}
 				}
 			}
 		},
