@@ -35,6 +35,9 @@ local function solar_laser_turret_extension(inputs)
 	}
 end
 
+local tower_base_size = { x = 4, y = 15 }
+local tower_base_shift = { -0.1105, -(16 / 2 - 2.6) }
+
 local function solar_laser_turret_shooting()
 	return {
 		filename = data_util.sprite "solar-laser-tower-fire.png",
@@ -192,18 +195,18 @@ data:extend {
 			{
 				{
 					filename = data_util.sprite "solar-laser-tower.png",
-					width = 32 * 4,
-					height = 32 * 15,
-					shift = { -0.1105, -(17 / 2 - 2.5) },
+					width = 32 * tower_base_size.x,
+					height = 32 * tower_base_size.y,
+					shift = tower_base_shift,
 					priority = "high",
 					direction_count = 1,
 					frame_count = 1,
 					hr_version =
 					{
 						filename = data_util.sprite "solar-laser-tower-hr.png",
-						width = 64 * 5,
-						height = 64 * 15,
-						shift = { -0.1105, -(17 / 2 - 2.5) },
+						width = 64 * tower_base_size.x,
+						height = 64 * tower_base_size.y,
+						shift = tower_base_shift,
 						priority = "high",
 						direction_count = 1,
 						frame_count = 1,
@@ -214,7 +217,7 @@ data:extend {
 					filename = data_util.sprite "solar-laser-tower-shadow.png",
 					width = 672,
 					height = 109,
-					shift = { 8, 0 },
+					shift = { 8, 0.5 },
 					draw_as_shadow = true,
 					priority = "high",
 					direction_count = 1,
@@ -234,9 +237,9 @@ data:extend {
 				},
 				{
 					filename = data_util.sprite "solar-laser-tower-mask.png",
-					width = 32 * 4,
-					height = 32 * 15,
-					shift = { -0.1105, -(17 / 2 - 2.5) },
+					width = 32 * tower_base_size.x,
+					height = 32 * tower_base_size.y,
+					shift = tower_base_shift,
 					flags = { "mask" },
 					priority = "high",
 					axially_symmetrical = false,
@@ -246,15 +249,16 @@ data:extend {
 					hr_version =
 					{
 						filename = data_util.sprite "solar-laser-tower-mask-hr.png",
-						width = 64 * 4,
-						height = 64 * 15,
-						shift = { -0.1105, -(17 / 2 - 2.5) },
+						width = 64 * tower_base_size.x,
+						height = 64 * tower_base_size.y,
+						shift = tower_base_shift,
 						flags = { "mask" },
 						priority = "high",
 						axially_symmetrical = false,
 						apply_runtime_tint = true,
 						direction_count = 1,
 						frame_count = 1,
+						scale = 0.5,
 					}
 				}
 			}

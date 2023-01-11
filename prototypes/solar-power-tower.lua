@@ -4,6 +4,8 @@ local hit_effects = require("__base__.prototypes.entity.hit-effects")
 
 require("util")
 
+local tower_shift = { 0, -(17 / 2 - 2.5) }
+local tower_size = { x = 5, y = 17 }
 
 data:extend {
 
@@ -71,15 +73,16 @@ data:extend {
 			{
 				{
 					filename = data_util.sprite "solar-power-tower.png",
-					width = 32 * 5,
-					height = 32 * 17,
-					shift = { 0, -(17 / 2 - 2.5) },
+					width = 32 * tower_size.x,
+					height = 32 * tower_size.y,
+					shift = tower_shift,
 					hr_version =
 					{
 						filename = data_util.sprite "solar-power-tower-hr.png",
-						width = 64 * 5,
-						height = 64 * 17,
-						shift = { 0, -(17 / 2 - 2.5) },
+						width = 64 * tower_size.x,
+						height = 64 * tower_size.y,
+						shift = tower_shift,
+						scale = 0.5,
 					}
 				},
 				{
@@ -187,15 +190,15 @@ data:extend {
 			heat_picture = apply_heat_pipe_glow
 			{
 				filename = data_util.sprite "solar-power-tower-heated.png",
-				width = 32 * 5,
-				height = 32 * 17,
-				shift = { 0, -(17 / 2 - 2.5) },
+				width = 32 * tower_size.x,
+				height = 32 * tower_size.y,
+				shift = tower_shift,
 				hr_version =
 				{
 					filename = data_util.sprite "solar-power-tower-heated-hr.png",
-					width = 64 * 5,
-					height = 64 * 17,
-					shift = { 0, -(17 / 2 - 2.5) },
+					width = 64 * tower_size.x,
+					height = 64 * tower_size.y,
+					shift = tower_shift,
 					scale = 0.5
 				}
 			},
