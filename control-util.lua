@@ -574,7 +574,7 @@ end
 
 control_util.update_settings()
 
-local mirror_kw = 100
+local mirror_kw = 110
 control_util.fluidPerTickPerMirror = mirror_kw / control_util.solar_heat_capacity_kj / 60
 control_util.fluidTempPerMirror = mirror_kw / control_util.solar_heat_capacity_kj
 control_util.tower_capture_radius = 33

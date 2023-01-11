@@ -74,20 +74,19 @@ data:extend {
 					width = 32 * 5,
 					height = 32 * 17,
 					shift = { 0, -(17 / 2 - 2.5) },
-					--hr_version =
-					--{
-					--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor.png",
-					--	width = 302,
-					--	height = 318,
-					--	scale = 0.5,
-					--	shift = util.by_pixel(-5, -7)
-					--}
+					hr_version =
+					{
+						filename = data_util.sprite "solar-power-tower-hr.png",
+						width = 64 * 5,
+						height = 64 * 17,
+						shift = { 0, -(17 / 2 - 2.5) },
+					}
 				},
 				{
 					filename = data_util.sprite "solar-power-tower-shadow.png",
-					width = 32 * 15,
-					height = 32 * 5,
-					shift = { 5, 0 },
+					width = 736,
+					height = 160,
+					shift = { 9.3, 0 },
 					draw_as_shadow = true,
 					--hr_version =
 					--{
@@ -110,17 +109,16 @@ data:extend {
 			width = 32 * 4,
 			height = 32 * 4,
 			shift = { 0, -12.35 },
-			-- TODO:
-			--hr_version =
-			--{
-			--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-lights-color.png",
-			--	blend_mode = "additive",
-			--	draw_as_glow = true,
-			--	width = 320,
-			--	height = 320,
-			--	scale = 0.5,
-			--	shift = { -0.03125, -0.1875 },
-			--}
+			hr_version =
+			{
+				filename = data_util.sprite "solar-power-tower-working-hr.png",
+				blend_mode = "additive",
+				draw_as_glow = true,
+				width = 64 * 4,
+				height = 64 * 4,
+				shift = { 0, -12.35 },
+				scale = 0.5
+			}
 		},
 		-- add a light to smooth out the effects of all the incoming beams
 		light = { intensity = 0.6, size = 9.9, shift = { 0.0, -12.35 } },
@@ -192,15 +190,14 @@ data:extend {
 				width = 32 * 5,
 				height = 32 * 17,
 				shift = { 0, -(17 / 2 - 2.5) },
-				-- TODO:
-				--hr_version =
-				--{
-				--	filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-heated.png",
-				--	width = 216,
-				--	height = 256,
-				--	scale = 0.5,
-				--	shift = util.by_pixel(3, -6.5)
-				--}
+				hr_version =
+				{
+					filename = data_util.sprite "solar-power-tower-heated-hr.png",
+					width = 64 * 5,
+					height = 64 * 17,
+					shift = { 0, -(17 / 2 - 2.5) },
+					scale = 0.5
+				}
 			},
 		},
 

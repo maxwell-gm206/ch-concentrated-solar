@@ -192,29 +192,29 @@ data:extend {
 			{
 				{
 					filename = data_util.sprite "solar-laser-tower.png",
-					width = 32 * 5,
-					height = 32 * 17,
-					shift = { 0, -(17 / 2 - 2.5) },
+					width = 32 * 4,
+					height = 32 * 15,
+					shift = { -0.1105, -(17 / 2 - 2.5) },
 					priority = "high",
 					direction_count = 1,
 					frame_count = 1,
-					--hr_version =
-					--{
-					--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-base.png",
-					--	priority = "high",
-					--	width = 138,
-					--	height = 104,
-					--	direction_count = 1,
-					--	frame_count = 1,
-					--	shift = util.by_pixel(-0.5, 2),
-					--	scale = 0.5
-					--}
+					hr_version =
+					{
+						filename = data_util.sprite "solar-laser-tower-hr.png",
+						width = 64 * 5,
+						height = 64 * 15,
+						shift = { -0.1105, -(17 / 2 - 2.5) },
+						priority = "high",
+						direction_count = 1,
+						frame_count = 1,
+						scale = 0.5
+					}
 				},
 				{
-					filename = data_util.sprite "solar-power-tower-shadow.png",
-					width = 32 * 15,
-					height = 32 * 5,
-					shift = { 5, 0 },
+					filename = data_util.sprite "solar-laser-tower-shadow.png",
+					width = 672,
+					height = 109,
+					shift = { 8, 0 },
 					draw_as_shadow = true,
 					priority = "high",
 					direction_count = 1,
@@ -234,28 +234,28 @@ data:extend {
 				},
 				{
 					filename = data_util.sprite "solar-laser-tower-mask.png",
-					width = 32 * 5,
-					height = 32 * 17,
-					shift = { 0, -(17 / 2 - 2.5) },
+					width = 32 * 4,
+					height = 32 * 15,
+					shift = { -0.1105, -(17 / 2 - 2.5) },
 					flags = { "mask" },
 					priority = "high",
 					axially_symmetrical = false,
 					apply_runtime_tint = true,
 					direction_count = 1,
 					frame_count = 1,
-					--hr_version =
-					--{
-					--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-base-shadow.png",
-					--flags = { "mask" },
-					--	line_length = 1,
-					--	width = 132,
-					--	height = 82,
-					--	draw_as_shadow = true,
-					--	direction_count = 1,
-					--	frame_count = 1,
-					--	shift = util.by_pixel(6, 3),
-					--	scale = 0.5
-					--}
+					hr_version =
+					{
+						filename = data_util.sprite "solar-laser-tower-mask-hr.png",
+						width = 64 * 4,
+						height = 64 * 15,
+						shift = { -0.1105, -(17 / 2 - 2.5) },
+						flags = { "mask" },
+						priority = "high",
+						axially_symmetrical = false,
+						apply_runtime_tint = true,
+						direction_count = 1,
+						frame_count = 1,
+					}
 				}
 			}
 		},
