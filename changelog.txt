@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.1.5:
+  All:
+    - Fixed nth tick next issue.
+    - Increased stack size of mirrors to 50.

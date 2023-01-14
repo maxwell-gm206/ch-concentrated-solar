@@ -16,7 +16,9 @@ local function on_nth_tick_beam_update(event)
 
 	--control_util.delete_all_beams()
 
-
+	if not global.tower_mirrors[global.last_updated_tower_beam] then
+		global.last_updated_tower_beam = nil
+	end
 
 	for i = 1, global.tower_beam_update_count or 1, 1 do
 
@@ -88,7 +90,9 @@ local function on_nth_tick_tower_update(event)
 
 	-- Place fluid in towers
 
-
+	if not global.tower_mirrors[global.last_updated_tower] then
+		global.last_updated_tower = nil
+	end
 
 	for i = 1, global.tower_update_count or 1, 1 do
 
