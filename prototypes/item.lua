@@ -28,7 +28,7 @@ data:extend {
 		subgroup = 'energy',
 		icon = data_util.sprite "heliostat-mirror-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
-		stack_size = 10,
+		stack_size = 50,
 		place_result = data_util.mod_prefix .. "heliostat-mirror",
 		order = "f[solar-energy]-a[mirror]",
 	},
