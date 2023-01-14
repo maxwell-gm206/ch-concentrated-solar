@@ -32,8 +32,8 @@ data:extend {
 
 		base_picture = {
 			layers = {
-				{
-					filename = data_util.sprite("heliostat-mirror-turret-base.png"),
+				data_util.auto_hr {
+					filename = "heliostat-mirror-turret-base",
 					size = 32 * 3,
 					direction_count = 1,
 					scale = 1,
@@ -55,25 +55,25 @@ data:extend {
 		},
 
 		folded_animation = {
-			layers = { {
-				direction_count = 16,
-				filename = data_util.sprite("heliostat-mirror-turret-16.png"),
-				size = 112,
-				frame_count = 1,
-				scale = 1.3,
-				shift = { 0, -1 },
-				line_length = 4
-			}, {
-				direction_count = 16,
-				filename = data_util.sprite("heliostat-mirror-turret-16-shadow.png"),
-				width = 32 * 5,
-				height = 32 * 3,
-				frame_count = 1,
-				draw_as_shadow = true,
-				scale = 1.3,
-				shift = { 1, 0 },
-				line_length = 4
-			},
+			layers = {
+				data_util.auto_hr {
+					direction_count = 32,
+					filename = "heliostat-mirror-turret",
+					size = 32 * 4,
+					frame_count = 1,
+					shift = { 0, -0.6 },
+					line_length = 8,
+				},
+				{
+					direction_count = 32,
+					filename = data_util.sprite("heliostat-mirror-turret-shadow.png"),
+					width = 160,
+					height = 112,
+					frame_count = 1,
+					draw_as_shadow = true,
+					shift = { 1.5, 0 },
+					line_length = 8
+				},
 			}
 		},
 	},

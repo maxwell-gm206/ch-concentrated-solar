@@ -7,11 +7,11 @@ local hit_effects = require("__base__.prototypes.entity.hit-effects")
 local lens_height = -13.1
 
 local function solar_laser_turret_extension(inputs)
-	return {
-		filename = data_util.sprite "solar-laser-tower-raise.png",
+	return data_util.auto_hr {
+		filename = "solar-laser-tower-raise",
 		priority = "medium",
 		size = 32 * 3,
-		frame_count = inputs.frame_count or 16,
+		frame_count = inputs.frame_count or 15,
 		line_length = inputs.line_length or 0,
 		run_mode = inputs.run_mode or "forward",
 		axially_symmetrical = false,
@@ -39,8 +39,8 @@ local tower_base_size = { x = 4, y = 15 }
 local tower_base_shift = { -0.1105, -(16 / 2 - 2.6) }
 
 local function solar_laser_turret_shooting()
-	return {
-		filename = data_util.sprite "solar-laser-tower-fire.png",
+	return data_util.auto_hr {
+		filename = "solar-laser-tower-fire",
 		line_length = 8,
 		width = 32 * 3,
 		height = 32 * 3,
@@ -48,17 +48,6 @@ local function solar_laser_turret_shooting()
 		direction_count = 64,
 		scale = 1.5,
 		shift = { 0, lens_height },
-		--hr_version =
-		--{
-		--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-shooting.png",
-		--	line_length = 8,
-		--	width = 126,
-		--	height = 120,
-		--	frame_count = 1,
-		--	direction_count = 64,
-		--	shift = util.by_pixel(0, -35),
-		--	scale = 0.5
-		--}
 	}
 end
 

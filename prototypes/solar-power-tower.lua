@@ -115,7 +115,7 @@ data:extend {
 			max_temperature = data_util.solar_max_temp,
 			specific_heat = "500KJ",
 			max_transfer = "10GW",
-			minimum_glow_temperature = 350,
+			minimum_glow_temperature = 250,
 			connections =
 			{
 				{

@@ -175,16 +175,21 @@ control_util.closestTower = function(inputs)
 	return bestTower
 end
 
+control_util.get_tower_catch_area = function(inputs)
+	return { { inputs.tower.position.x - inputs.radius, inputs.tower.position.y - inputs.radius },
+		{ inputs.tower.position.x + inputs.radius, inputs.tower.position.y + inputs.radius } }
+end
+
 ---@param inputs {entity:LuaEntity, radius:number? }
 ---@return LuaEntity[]
 ---@nodiscard
 control_util.find_towers_around_entity = function(inputs)
-	local r = inputs.radius or control_util.tower_capture_radius
+
 	return inputs.entity.surface.find_entities_filtered {
 		name = tower_names,
 		force = inputs.entity.force,
-		area = { { inputs.entity.position.x - r, inputs.entity.position.y - r },
-			{ inputs.entity.position.x + r, inputs.entity.position.y + r } }
+		area = control_util.get_tower_catch_area { tower = inputs.entity,
+			radius = inputs.radius or control_util.tower_capture_radius }
 	}
 end
 
@@ -192,12 +197,11 @@ end
 ---@return LuaEntity[]
 ---@nodiscard
 control_util.find_mirrors_around_entity = function(inputs)
-	local r = inputs.radius or control_util.tower_capture_radius
 	return inputs.entity.surface.find_entities_filtered {
 		name = control_util.heliostat_mirror,
 		force = inputs.entity.force,
-		area = { { inputs.entity.position.x - r, inputs.entity.position.y - r },
-			{ inputs.entity.position.x + r, inputs.entity.position.y + r } }
+		area = control_util.get_tower_catch_area { tower = inputs.entity,
+			radius = inputs.radius or control_util.tower_capture_radius }
 	}
 end
 
@@ -287,7 +291,7 @@ control_util.linkMirrorToTower = function(args)
 	local x = mirror.position.x - tower.position.x
 	local y = mirror.position.y - tower.position.y
 
-	mirror.orientation = -math.atan2(y, x) * 0.15915494309 + 0.25
+	mirror.orientation = math.atan2(y, x) * 0.15915494309 - 0.25
 
 
 end
@@ -306,23 +310,10 @@ end
 
 
 control_util.on_init = function()
-	control_util.buildSurfaces()
 	control_util.buildTrees()
 	game.print(control_util.mod_prefix .. "welcome")
 end
 
-control_util.buildSurfaces = function()
-
-	global.surfaces = {}
-
-
-	for _, surface in pairs(game.surfaces) do
-		if global.surfaces[surface.index] == nil then
-			--game.print("reseting surface" .. surface.index)
-			global.surfaces[surface.index] = { last_sun_stage = 0, surface = surface }
-		end
-	end
-end
 
 control_util.buildTrees = function()
 	--game.print("generating mirror links")
@@ -581,7 +572,7 @@ control_util.tower_capture_radius = 33
 control_util.tower_capture_radius_sqr = control_util.tower_capture_radius ^ 2
 control_util.sun_stages = 20
 -- Number of groups of mirrors that will have sun rays spawned on them
-control_util.mirror_groups = 50
+control_util.mirror_groups = 100
 -- Number of sets of mirrors, used to spawn sun-rays
 control_util.DEBUG_LINES = false
 

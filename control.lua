@@ -26,7 +26,6 @@ local function on_nth_tick_beam_update(event)
 			local tower = global.towers[global.last_updated_tower_beam]
 			local sid = tower.surface.index
 
-			print("Generating beams around " .. global.last_updated_tower_beam)
 
 			--log("Generating beams on " .. data.surface.name)
 
@@ -34,48 +33,46 @@ local function on_nth_tick_beam_update(event)
 
 			local stage = math.floor(control_util.calc_sun(tower.surface) * control_util.sun_stages) - 1
 
-			if (global.surfaces[sid].last_sun_stage ~= stage) then
+			print("Generating beams around " .. global.last_updated_tower_beam)
+			-- max possible time a beam could live for, to account for possible errors
+			local ttl = math.abs(tower.surface.evening - tower.surface.dawn) * tower.surface.ticks_per_day
 
-				-- max possible time a beam could live for, to account for possible errors
-				local ttl = math.abs(tower.surface.evening - tower.surface.dawn) * tower.surface.ticks_per_day
+			--game.print("New sun stage " .. stage .. " with life of " .. ttl)
+			for mid, mirror in pairs(global.tower_mirrors[global.last_updated_tower_beam]) do
+				-- Can only spawn sun rays on mirrors with towers
 
-				--game.print("New sun stage " .. stage .. " with life of " .. ttl)
-				for mid, mirror in pairs(global.tower_mirrors[global.last_updated_tower_beam]) do
-					-- Can only spawn sun rays on mirrors with towers
+				local group = (mid * 29) % control_util.mirror_groups
 
-					local group = (mid * 29) % control_util.mirror_groups
-
-					if group <= stage and global.mirror_tower[mid].beam == nil then
-						-- at this point, we dont need to worry about the old beams,
-						-- as they have been destroyed
-						global.mirror_tower[mid].beam = control_util.generateBeam
-						{
-							mirror = mirror,
-							tower = tower,
-							ttl = ttl
-						}
-					elseif group > stage and global.mirror_tower[mid].beam then
-						global.mirror_tower[mid].beam.destroy()
-						global.mirror_tower[mid].beam = nil
-
-					end
-					--
-					--log("trying beam for mirror in group " .. group)
-					--
-					--	-- If our group is valued at the current sun stage, fire our laser
-					--	global.mirror_tower[mid].beam = control_util.generateBeam
-					--	{
-					--		mirror = mirror,
-					--		tower = tower,
-					--		ttl = ttl
-					--	}
-					--	--elseif group > stage and global.mirror_tower[mid].beam then
-					--	--	-- handle sudden timeskips, mostly from my debugging time set commands
-					--	--	global.mirror_tower[mid].beam.destroy()
-					--else
-					--	global.mirror_tower[mid].beam = nil
+				if group <= stage and global.mirror_tower[mid].beam == nil then
+					-- at this point, we dont need to worry about the old beams,
+					-- as they have been destroyed
+					global.mirror_tower[mid].beam = control_util.generateBeam
+					{
+						mirror = mirror,
+						tower = tower,
+						ttl = ttl
+					}
+				elseif group > stage and global.mirror_tower[mid].beam then
+					global.mirror_tower[mid].beam.destroy()
+					global.mirror_tower[mid].beam = nil
 
 				end
+				--
+				--log("trying beam for mirror in group " .. group)
+				--
+				--	-- If our group is valued at the current sun stage, fire our laser
+				--	global.mirror_tower[mid].beam = control_util.generateBeam
+				--	{
+				--		mirror = mirror,
+				--		tower = tower,
+				--		ttl = ttl
+				--	}
+				--	--elseif group > stage and global.mirror_tower[mid].beam then
+				--	--	-- handle sudden timeskips, mostly from my debugging time set commands
+				--	--	global.mirror_tower[mid].beam.destroy()
+				--else
+				--	global.mirror_tower[mid].beam = nil
+
 			end
 			--global.surfaces[sid].last_sun_stage = stage
 			--end
@@ -102,7 +99,7 @@ local function on_nth_tick_tower_update(event)
 			local mirrors = global.tower_mirrors[tid]
 
 
-			print("Updating tower " .. tid)
+			--print("Updating tower " .. tid)
 
 			local tower = global.towers[tid]
 
@@ -227,25 +224,26 @@ script.on_event(
 		--create new boxes?
 		if player.selected and control_util.isTower(player.selected.name)
 			and global.tower_mirrors[player.selected.unit_number] then
-			local b = {}
 
-			for i, mirror in pairs(global.tower_mirrors[player.selected.unit_number]) do
-
-				b[i] = player.selected.surface.create_entity {
+			-- Create a single box for the entire catchment area of the tower
+			boxes[event.player_index] = {
+				[player.selected.unit_number] = player.selected.surface.create_entity {
 					type = "highlight-box",
 					name = "highlight-box",
-					position = mirror.position,
-					bounding_box = mirror.selection_box,
+					position = player.selected.position,
+
+					bounding_box = control_util.get_tower_catch_area { tower = player.selected,
+						radius = control_util.tower_capture_radius },
+
 					render_player_index = event.player_index,
-					time_to_live = 500, -- in case of bugs
+					time_to_live = 500,
 				}
+			}
 
-
-			end
-			boxes[event.player_index] = b
 		elseif player.selected and player.selected.name == control_util.heliostat_mirror then
 
 			local td = global.mirror_tower[player.selected.unit_number]
+
 			if td and td.tower and td.tower.valid then
 				boxes[event.player_index] = { [td.tower.unit_number] = player.selected.surface.create_entity {
 					type = "highlight-box",
@@ -266,9 +264,7 @@ script.on_event(
 	{ defines.events.on_script_trigger_effect },
 	function(event)
 
-		game.print("script triggered effect!")
-
-
+		--game.print("script triggered effect!")
 
 		if event.effect_id == control_util.mod_prefix .. "sunlight-laser-damage" then
 			local target = event.target_entity
@@ -287,7 +283,7 @@ script.on_event(
 				beam.set_beam_target(target)
 
 			else
-				game.print("Turret it empty!")
+				--game.print("Turret it empty!")
 			end
 
 		end
@@ -308,7 +304,7 @@ script.on_event(defines.events.on_entity_damaged,
 
 			event.entity.health = event.entity.health - newDamage
 
-			print("laser turret dealed " .. newDamage .. " from " .. event.original_damage_amount)
+			print("laser turret dealt " .. newDamage .. " from " .. event.original_damage_amount)
 
 		end
 	end)
