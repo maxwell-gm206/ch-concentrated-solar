@@ -12,7 +12,7 @@
 ---@field tick integer
 
 ---@class MirrorTowerRelation
----@field beam LuaEntity
+---@field beam LuaEntity?
 ---@field tower LuaEntity
 ---@field mirror LuaEntity
 ---Other towers in range, if there are any
@@ -24,7 +24,7 @@
 ---@field tower_mirrors {[integer] : {[integer] : LuaEntity}}
 ---@field mirrors {[integer] : LuaEntity?}
 ---@field towers {[integer] : LuaEntity?}
----@field surfaces table
+---@field player_boxes {[integer] : LuaEntity?}
 
 
 ---@class Global

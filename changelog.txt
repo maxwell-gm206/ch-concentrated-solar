@@ -1,5 +1,16 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.1.5:
-  All:
+Version: 0.2.0
+Date: 2023.01.16
+  Major Features:
+    - Added bounds indicator for placing towers and mirrors
+  Minor Features:
+    - Reworked how highlight boxes are managed
+    - Increased tower range to 35 to accomodate for previous slightly incorrect calulcation
+  Bugfixes:
+    - Fixed incosistencies in tower range
+---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+Date: 2023.01.14
+  Bugfixes:
     - Fixed nth tick next issue.
     - Increased stack size of mirrors to 50.

@@ -1,6 +1,6 @@
 {
 	"name": "ch-concentrated-solar",
-	"version": "0.1.5",
+	"version": "0.2.0",
 	"title": "Cheese's Concentrated Solar",
 	"author": "StolenCheese",
 	"factorio_version": "1.1",
@@ -8,5 +8,5 @@
 		"base >= 1.1",
 		"? gvv"
 	],
-	"description": "This mod adds in concentrated solar towers heated by heliostat mirrors."
+	"description": "Adds solar power towers heated by heliostat mirrors as a new form of heat generation."
 }

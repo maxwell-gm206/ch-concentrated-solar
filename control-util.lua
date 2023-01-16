@@ -101,6 +101,7 @@ control_util.linkMirrorToTowerIfCloser = function(inputs)
 		elseif newDist < control_util.tower_capture_radius_sqr then
 			-- Tower not closer, but still in range, could be used later,
 			-- add it to the mirror's list of other towers in range
+			-- TODO: should use bounds, but not important
 
 			--game.print("alternate tower in range")
 			control_util.mark_in_range(inputs.mirror.unit_number, inputs.tower)
@@ -189,7 +190,8 @@ control_util.find_towers_around_entity = function(inputs)
 		name = tower_names,
 		force = inputs.entity.force,
 		area = control_util.get_tower_catch_area { tower = inputs.entity,
-			radius = inputs.radius or control_util.tower_capture_radius }
+			-- Reduce radius by 2 to account for the size of the tower's base collider
+			radius = (inputs.radius or control_util.tower_capture_radius) - 2 }
 	}
 end
 
@@ -200,8 +202,12 @@ control_util.find_mirrors_around_entity = function(inputs)
 	return inputs.entity.surface.find_entities_filtered {
 		name = control_util.heliostat_mirror,
 		force = inputs.entity.force,
-		area = control_util.get_tower_catch_area { tower = inputs.entity,
-			radius = inputs.radius or control_util.tower_capture_radius }
+		area = control_util.get_tower_catch_area {
+			tower = inputs.entity,
+			-- reduce radius by 1 to account of size of mirror's base collider
+			radius = (inputs.radius or control_util.tower_capture_radius) - 1,
+		},
+		limit = control_util.max_mirrors_per_tower,
 	}
 end
 
@@ -310,21 +316,38 @@ end
 
 
 control_util.on_init = function()
-	control_util.buildTrees()
+	-- Ensure every global table used exists
+
+	---@type {[integer] : {[integer] : LuaEntity}}
+	global.tower_mirrors = global.tower_mirrors or {}
+
+	---@type  {[integer]: MirrorTowerRelation}
+	global.mirror_tower = global.mirror_tower or {}
+
+	---@type  {[integer] : LuaEntity}
+	global.mirrors = global.mirrors or {}
+
+	---@type {[integer] : LuaEntity}
+	global.towers = global.towers or {}
+
+	---@type {[integer] : LuaEntity}
+	global.player_boxes = global.player_boxes or {}
+
+	---@type {[integer] : LuaEntity}
+	global.player_tower_rect = global.player_tower_rect or {}
+
+	-- No longer used
+	global.surfaces = nil
+
+	-- control_util.buildTrees()
 	game.print(control_util.mod_prefix .. "welcome")
 end
 
 
 control_util.buildTrees = function()
-	--game.print("generating mirror links")
+	print("Generating tower relations")
 
 	--control_util.delete_all_beams()
-
-	global.tower_mirrors = {}
-	global.mirror_tower = {}
-	global.mirrors = {}
-	global.beam_mirrors = {}
-	global.towers = {}
 
 	--control_util.consistencyCheck()
 
@@ -490,8 +513,6 @@ control_util.on_built_entity_callback = function(entity, tick)
 	if global.mirror_tower == nil then
 		control_util.buildTrees()
 	else
-		local surface = entity.surface
-
 		if entity.name == control_util.heliostat_mirror then
 			-- Register this mirror
 			global.mirrors[entity.unit_number] = entity
@@ -565,16 +586,22 @@ end
 
 control_util.update_settings()
 
+---@type uint
 local mirror_kw = 110
+
 control_util.fluidPerTickPerMirror = mirror_kw / control_util.solar_heat_capacity_kj / 60
 control_util.fluidTempPerMirror = mirror_kw / control_util.solar_heat_capacity_kj
-control_util.tower_capture_radius = 33
+control_util.tower_capture_radius = 35
 control_util.tower_capture_radius_sqr = control_util.tower_capture_radius ^ 2
-control_util.sun_stages = 20
+
 -- Number of groups of mirrors that will have sun rays spawned on them
-control_util.mirror_groups = 100
+control_util.sun_stages = 20
+
 -- Number of sets of mirrors, used to spawn sun-rays
-control_util.DEBUG_LINES = false
+control_util.mirror_groups = 100
+
+---@type uint
+control_util.max_mirrors_per_tower = math.ceil(control_util.solar_max_production_kw / mirror_kw)
 
 
 control_util.registerTowerName(control_util.mod_prefix .. "solar-power-tower")
