@@ -7,8 +7,11 @@ require("util")
 local tower_shift = { 0, -(17 / 2 - 2.5) }
 local tower_size = { x = 5, y = 17 }
 
-data:extend {
+local tower_collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } }
+local tower_selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } }
+local tower_drawing_box   = { { -2.5, -14.5 }, { 2.5, 2.5 } }
 
+data:extend {
 	{
 		type = "reactor",
 		name = data_util.mod_prefix .. "solar-power-tower",
@@ -19,6 +22,11 @@ data:extend {
 		max_health = 500,
 		corpse = "medium-remnants",
 		dying_explosion = "nuclear-reactor-explosion",
+
+		radius_visualisation_specification = {
+			sprite = { filename = data_util.sprite "solar-power-tower-radius-visualisation.png", size = 12 },
+			distance = data_util.tower_capture_radius
+		},
 
 		--- ENERGY
 
@@ -59,9 +67,9 @@ data:extend {
 				color = { 0, 0, 0 }
 			}
 		},
-		collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } },
-		selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } },
-		drawing_box   = { { -2.5, -14.5 }, { 2.5, 2.5 } },
+		collision_box = tower_collision_box,
+		selection_box = tower_selection_box,
+		drawing_box   = tower_drawing_box,
 
 		damaged_trigger_effect = hit_effects.entity(),
 

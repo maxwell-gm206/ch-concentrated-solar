@@ -13,6 +13,8 @@ shared_util.solar_max_production_kw = 60000
 -- (per second)
 shared_util.solar_max_consumption = 1
 
+shared_util.tower_capture_radius = 35
+shared_util.tower_capture_radius_sqr = shared_util.tower_capture_radius ^ 2
 
 -- At the max temp, we want to generate exactly max production kw
 -- using exactly max consumption units per second

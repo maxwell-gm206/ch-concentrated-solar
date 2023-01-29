@@ -316,7 +316,7 @@ script.on_event(defines.events.on_player_cursor_stack_changed,
 
 					global.player_tower_rect[event.player_index][tid] = rendering.draw_rectangle {
 						draw_on_ground = true,
-						color = { r = 0.12, g = 0.13, b = 0.14, a = 0.5 },
+						color = { r = 0.12 * 0.2, g = 0.457 * 0.2, b = 0.593 * 0.2, a = 0.1 },
 						left_top = tower,
 						right_bottom = tower,
 						left_top_offset = { x = -control_util.tower_capture_radius, y = -control_util.tower_capture_radius },

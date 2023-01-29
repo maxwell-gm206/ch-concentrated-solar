@@ -591,8 +591,7 @@ local mirror_kw = 110
 
 control_util.fluidPerTickPerMirror = mirror_kw / control_util.solar_heat_capacity_kj / 60
 control_util.fluidTempPerMirror = mirror_kw / control_util.solar_heat_capacity_kj
-control_util.tower_capture_radius = 35
-control_util.tower_capture_radius_sqr = control_util.tower_capture_radius ^ 2
+
 
 -- Number of groups of mirrors that will have sun rays spawned on them
 control_util.sun_stages = 20
