@@ -4,7 +4,7 @@ Date: 2023.01.29
   Major Features:
     - K2+SE Compatibility.
     - K2 towers produce 110MW of heat.
-    - Research requires advanced solar panels.
+    - Research requires K2 advanced solar panels, or SE space science.
     - SE Towers can be placed in space.
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
