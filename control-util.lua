@@ -586,21 +586,7 @@ end
 
 control_util.update_settings()
 
----@type uint
-local mirror_kw = 110
 
-control_util.fluidPerTickPerMirror = mirror_kw / control_util.solar_heat_capacity_kj / 60
-control_util.fluidTempPerMirror = mirror_kw / control_util.solar_heat_capacity_kj
-
-
--- Number of groups of mirrors that will have sun rays spawned on them
-control_util.sun_stages = 20
-
--- Number of sets of mirrors, used to spawn sun-rays
-control_util.mirror_groups = 100
-
----@type uint
-control_util.max_mirrors_per_tower = math.ceil(control_util.solar_max_production_kw / mirror_kw)
 
 
 control_util.registerTowerName(control_util.mod_prefix .. "solar-power-tower")

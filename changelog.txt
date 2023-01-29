@@ -1,19 +1,29 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.2
+Date: 2023.01.29
+  Major Features:
+    - K2+SE Compatibility.
+    - K2 towers produce 110MW of heat.
+    - Research requires advanced solar panels.
+    - SE Towers can be placed in space.
+---------------------------------------------------------------------------------------------------
 Version: 0.2.1
 Date: 2023.01.29
   Minor Features:
-    - Added bounds indicator when tower in cursor
-    - Tweaked bounds colour
+    - Added bounds indicator when tower in cursor.
+    - Tweaked bounds colour.
+    - Mirrors and towers use AAI ingredients when present.
+    - Tweaked wording of mirrors to be in reference to solar intensity increase instead of power.
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 2023.01.16
   Major Features:
-    - Added bounds indicator for placing towers and mirrors
+    - Added bounds indicator for placing towers and mirrors.
   Minor Features:
-    - Reworked how highlight boxes are managed
-    - Increased tower range to 35 to accomodate for previous slightly incorrect calulcation
+    - Reworked how highlight boxes are managed.
+    - Increased tower range to 35 to accomodate for previous slightly incorrect calulcation.
   Bugfixes:
-    - Fixed incosistencies in tower range
+    - Fixed incosistencies in tower range.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.5
 Date: 2023.01.14

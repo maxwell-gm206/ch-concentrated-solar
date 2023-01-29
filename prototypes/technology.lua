@@ -23,14 +23,14 @@ data:extend {
 		},
 		unit =
 		{
-			count = 300,
+			count = 400,
 			ingredients =
 			{
 				{ "automation-science-pack", 1 },
 				{ "logistic-science-pack", 1 },
 				{ "chemical-science-pack", 1 }
 			},
-			time = 30
+			time = 45
 		},
 	},
 	{
@@ -58,7 +58,7 @@ data:extend {
 				{ "military-science-pack", 1 },
 				{ "chemical-science-pack", 1 }
 			},
-			time = 30
+			time = 45
 		},
 	}
 }

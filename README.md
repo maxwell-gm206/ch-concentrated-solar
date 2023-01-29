@@ -14,3 +14,17 @@ This mod adds concentrated solar power to Factorio, in two components:
 ## Performance
 
 Most work is done on building placement and deletion, then each group of a single tower and all it's mirrors are updated at once, making this quite performant. For UPS oriented megabases this is clearly not the way for the same reason as nuclear power; fluid.
+
+## Mod Compatibility
+
+### K2
+
+- Power buff to 110MW
+- Researched after advanced solar panels
+- Tweaked crafting recipes (included glass, lithium-chloride, etc.)
+
+### Space Exploration
+
+- Towers can be placed in space
+- Requires space science packs
+- K2+SE support to merge tech changes

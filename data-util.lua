@@ -23,4 +23,31 @@ data_util.auto_hr = function(inputs)
 	return inputs
 end
 
+-- (per second)
+---@type uint
+data_util.solar_max_production_kw = 60000
+
+if mods["Krastorio2"] then
+	data_util.solar_max_production_kw = 110000
+end
+
+
+-- (per second)
+data_util.solar_max_consumption = 1
+
+-- At the max temp, we want to generate exactly max production kw
+-- using exactly max consumption units per second
+
+-- luckily, this is easy to calculate, as the base temp of solar fluid is set to 0
+
+-- production  = temp * heap capacity
+
+data_util.solar_heat_capacity_kj = data_util.solar_max_production_kw / data_util.solar_max_temp
+
+-- scale to 1 second intervals
+
+data_util.solar_heat_capacity_kj = data_util.solar_heat_capacity_kj / data_util.solar_max_consumption
+
+
+
 return data_util

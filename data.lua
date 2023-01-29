@@ -8,6 +8,8 @@ require "prototypes.technology"
 require "prototypes.recipe"
 require "prototypes.item"
 require "prototypes.achievement"
+
+
 -- Increase entity size globally, to account for increased size on solar towers and shadows
 
 data.raw["utility-constants"]["default"].entity_renderer_search_box_limits.bottom = 13
