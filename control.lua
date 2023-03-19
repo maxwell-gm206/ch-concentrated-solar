@@ -11,7 +11,6 @@ end
 script.on_init(control_util.on_init)
 
 local function on_nth_tick_beam_update(event)
-
 	--control_util.consistencyCheck()
 
 	--control_util.delete_all_beams()
@@ -21,7 +20,6 @@ local function on_nth_tick_beam_update(event)
 	end
 
 	for i = 1, global.tower_beam_update_count or 1, 1 do
-
 		global.last_updated_tower_beam = next(global.tower_mirrors, global.last_updated_tower_beam)
 
 		if global.last_updated_tower_beam then
@@ -48,15 +46,14 @@ local function on_nth_tick_beam_update(event)
 					-- at this point, we dont need to worry about the old beams,
 					-- as they have been destroyed
 					global.mirror_tower[mid].beam = control_util.generateBeam
-					{
-						mirror = mirror,
-						tower = tower,
-						ttl = ttl
-					}
+						{
+							mirror = mirror,
+							tower = tower,
+							ttl = ttl
+						}
 				elseif group > stage and global.mirror_tower[mid].beam then
 					global.mirror_tower[mid].beam.destroy()
 					global.mirror_tower[mid].beam = nil
-
 				end
 			end
 		end
@@ -64,7 +61,6 @@ local function on_nth_tick_beam_update(event)
 end
 
 local function on_nth_tick_tower_update(event)
-
 	--control_util.buildTrees()
 	--control_util.consistencyCheck()
 
@@ -75,7 +71,6 @@ local function on_nth_tick_tower_update(event)
 	end
 
 	for i = 1, global.tower_update_count or 1, 1 do
-
 		global.last_updated_tower = next(global.tower_mirrors, global.last_updated_tower)
 
 		if global.last_updated_tower then
@@ -95,7 +90,7 @@ local function on_nth_tick_tower_update(event)
 
 				if sun > 0 and table_size(mirrors) > 0 then
 					local amount = control_util.fluidTempPerMirror * sun * table_size(mirrors)
-					-- set to temprature and amount, as fluid turrets cannot display temprature
+					-- set to temprature and amount, as fluid turrets cannot display temperature
 					tower.insert_fluid {
 						name        = control_util.mod_prefix .. "solar-fluid",
 						amount      = amount,
@@ -138,7 +133,6 @@ script.on_event(
 script.on_event(
 	{ defines.events.on_selected_entity_changed },
 	function(event)
-
 		local player = game.get_player(event.player_index)
 
 		if player == nil then
@@ -154,7 +148,6 @@ script.on_event(
 		end
 		--create new boxes?
 		if player.selected and player.selected.name == control_util.heliostat_mirror then
-
 			local td = global.mirror_tower[player.selected.unit_number]
 
 			if td and td.tower and td.tower.valid then
@@ -176,7 +169,6 @@ script.on_event(
 script.on_event(
 	{ defines.events.on_script_trigger_effect },
 	function(event)
-
 		--game.print("script triggered effect!")
 
 		if event.effect_id == control_util.mod_prefix .. "sunlight-laser-damage" then
@@ -194,13 +186,10 @@ script.on_event(
 					blend = 1,
 				}
 				beam.set_beam_target(target)
-
 			else
 				--game.print("Turret it empty!")
 			end
-
 		end
-
 	end
 )
 
@@ -218,14 +207,12 @@ script.on_event(defines.events.on_entity_damaged,
 			event.entity.health = event.entity.health - newDamage
 
 			--print("laser turret dealt " .. newDamage .. " from " .. event.original_damage_amount)
-
 		end
 	end)
 
 
 script.on_event(defines.events.on_runtime_mod_setting_changed,
 	function(param1)
-
 		script.on_nth_tick(control_util.tower_update_interval, nil)
 		script.on_nth_tick(control_util.beam_update_interval, nil)
 
@@ -252,7 +239,6 @@ script.on_event(
 		defines.events.script_raised_destroy
 	},
 	function(event)
-
 		--game.print("Somthing was removed")
 		if global.tower_mirrors == nil then
 			control_util.buildTrees()
@@ -264,8 +250,6 @@ script.on_event(
 		--game.print("entity " .. entity.unit_number .. " destroyed")
 
 		if entity.name == control_util.heliostat_mirror then
-
-
 			--game.print("Removing mirror")
 
 			-- if this mirror is connected to a tower
@@ -275,15 +259,13 @@ script.on_event(
 
 				--game.print("Removing mirror from tower")
 
-				control_util.removeMirrorFromTower { tower = global.mirror_tower[entity.unit_number].tower, mirror = entity }
-
+				control_util.removeMirrorFromTower { tower = global.mirror_tower[entity.unit_number].tower, mirror =
+				entity }
 			else
-
 				--game.print("Removed mirror with no tower")
 			end
 
 			global.mirrors[entity.unit_number] = nil
-
 		elseif global.towers[entity.unit_number] and control_util.isTower(entity.name) then
 			control_util.notify_tower_invalid(entity.unit_number)
 		end
@@ -298,7 +280,6 @@ script.on_event(
 
 script.on_event(defines.events.on_player_cursor_stack_changed,
 	function(event)
-
 		-- Generate structure if not exists - remove eventually, but keep for backwards compat
 		global.player_tower_rect = global.player_tower_rect or {}
 
@@ -307,20 +288,20 @@ script.on_event(defines.events.on_player_cursor_stack_changed,
 
 		if stack and stack.valid_for_read and
 			(control_util.isTower(stack.name) or stack.name == control_util.heliostat_mirror) then
-
 			-- Ensure table exists, but do not overwrite - possible for this to be called multiple times in a row
 			global.player_tower_rect[event.player_index] = global.player_tower_rect[event.player_index] or {}
 
 			for tid, tower in pairs(global.towers) do
 				if not global.player_tower_rect[event.player_index][tid] then
-
 					global.player_tower_rect[event.player_index][tid] = rendering.draw_rectangle {
 						draw_on_ground = true,
 						color = { r = 0.12 * 0.2, g = 0.457 * 0.2, b = 0.593 * 0.2, a = 0.1 },
 						left_top = tower,
 						right_bottom = tower,
-						left_top_offset = { x = -control_util.tower_capture_radius, y = -control_util.tower_capture_radius },
-						right_bottom_offset = { x = control_util.tower_capture_radius, y = control_util.tower_capture_radius },
+						left_top_offset = { x = -control_util.tower_capture_radius,
+							y = -control_util.tower_capture_radius },
+						right_bottom_offset = { x = control_util.tower_capture_radius,
+							y = control_util.tower_capture_radius },
 						filled = true,
 						players = { event.player_index },
 						surface = tower.surface
@@ -335,8 +316,6 @@ script.on_event(defines.events.on_player_cursor_stack_changed,
 			end
 			global.player_tower_rect[event.player_index] = nil
 		end
-
-
 	end
 )
 
