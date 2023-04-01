@@ -5,14 +5,10 @@ if mods["Krastorio2"] then
 
 	table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].prerequisites, "kr-advanced-solar-panel")
 	-- Power buff comes at cost of more expensive research
-
-
 end
 
 
 if mods["space-exploration"] then
-
-
 	data.raw["turret"]["chcs-heliostat-mirror"].se_allow_in_space = true
 	data.raw["reactor"]["chcs-solar-power-tower"].se_allow_in_space = true
 
@@ -37,18 +33,16 @@ if mods["space-exploration"] then
 	table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].prerequisites, "space-science-pack")
 
 	if mods["Krastorio2"] then
-
 		table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].prerequisites, "kr-optimization-tech-card")
 		table.insert(data.raw["technology"]["chcs-weaponized-solar-energy"].prerequisites, "kr-optimization-tech-card")
-
 	end
-else if mods["Krastorio2"] then
+else
+	if mods["Krastorio2"] then
 		-- only add production to non-space
 		table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].unit.ingredients,
 			{ "production-science-pack", 1 })
 
-		table.insert(data.raw["technology"]["chcs-weaponized-solar-energy"].unit.ingredients, { "production-science-pack", 1 })
-
+		table.insert(data.raw["technology"]["chcs-weaponized-solar-energy"].unit.ingredients,
+		{ "production-science-pack", 1 })
 	end
-
 end

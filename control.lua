@@ -4,6 +4,7 @@ local control_util = require "control-util"
 local highlight    = require "control.highlight"
 local nthtick      = require "control.nthtick"
 local tower_laser  = require "control.tower-laser"
+local ui           = require "control.ui"
 
 local util         = require "util"
 
@@ -19,6 +20,8 @@ script.on_nth_tick(control_util.tower_update_interval, nthtick.on_nth_tick_tower
 if settings.global["ch-enable-beams"].value then
 	script.on_nth_tick(control_util.beam_update_interval, nthtick.on_nth_tick_beam_update)
 end
+
+script.on_nth_tick(60, ui.update_guis)
 
 -- ON ENTITY ADDED
 script.on_event(
@@ -132,6 +135,11 @@ script.on_event(defines.events.on_runtime_mod_setting_changed,
 	end
 )
 
+--- CUSTOM UI HOOKS
+
+script.on_event(defines.events.on_gui_opened, ui.on_gui_opened)
+script.on_event(defines.events.on_gui_closed, ui.on_gui_closed)
+script.on_event(defines.events.on_gui_click, ui.on_gui_click)
 
 
 --- APPLY FILTERS

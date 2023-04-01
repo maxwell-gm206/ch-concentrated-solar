@@ -41,7 +41,7 @@ data_util.solar_max_consumption = 1
 
 -- production  = temp * heap capacity
 
-data_util.solar_heat_capacity_kj = (data_util.solar_max_production_mw * 0.001) / data_util.solar_max_temp
+data_util.solar_heat_capacity_kj = (data_util.solar_max_production_mw * 1000) / data_util.solar_max_temp
 
 -- scale to 1 second intervals
 

@@ -46,6 +46,19 @@ control_util.calc_sun = function(surface)
 	end
 end
 
+control_util.average_daylight = function(surface)
+	-- Ticks for 3 regions of time
+	local ticks_sunset = (surface.evening - surface.dusk)
+	local ticks_night = (surface.morning - surface.evening)
+	local ticks_sunrise = (surface.dawn - surface.morning)
+
+	-- Night is annoying the middle range; this is the easier way to find day
+
+	local day_length = 1 - ticks_sunset - ticks_night - ticks_sunrise
+
+	return (day_length + ticks_sunset / 2 + ticks_sunrise / 2)
+end
+
 
 
 ---@param mirror LuaEntity

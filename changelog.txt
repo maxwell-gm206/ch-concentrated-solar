@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.0
+Date: 2023.04.01
+  Major Features:
+    - Custom GUI for interacting with towers.
+  Features:
+    - Beam graphics can now be disabled.
+    - Tower energy production can now be customized.
+  Bugfixes:
+    - Removed old debug settings.
+  Info:
+    - 1000 downloads (thanks!)
+---------------------------------------------------------------------------------------------------
 Version: 0.2.2
 Date: 2023.01.29
   Major Features:
