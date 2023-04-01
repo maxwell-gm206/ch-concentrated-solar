@@ -5,12 +5,9 @@ data_util.sprite = function(name)
 end
 
 data_util.auto_hr = function(inputs)
-
-
 	inputs.hr_version = table.deepcopy(inputs)
 	inputs.hr_version.scale = (inputs.scale or 1) / 2
 	if inputs.hr_version.width then
-
 		inputs.hr_version.width = inputs.hr_version.width * 2
 		inputs.hr_version.height = inputs.hr_version.height * 2
 	else
@@ -23,12 +20,14 @@ data_util.auto_hr = function(inputs)
 	return inputs
 end
 
--- (per second)
----@type uint
-data_util.solar_max_production_kw = 60000
+-- Multiply production by K2 scalar if k2 is installed
 
+data_util.solar_max_production_mw = settings.startup["ch-solar-max-production-mw"].value
 if mods["Krastorio2"] then
-	data_util.solar_max_production_kw = 110000
+	data_util.solar_max_production_mw =
+		math.ceil(
+			data_util.solar_max_production_mw *
+			settings.startup["ch-k2-production-mult"].value)
 end
 
 
@@ -42,7 +41,7 @@ data_util.solar_max_consumption = 1
 
 -- production  = temp * heap capacity
 
-data_util.solar_heat_capacity_kj = data_util.solar_max_production_kw / data_util.solar_max_temp
+data_util.solar_heat_capacity_kj = (data_util.solar_max_production_mw * 0.001) / data_util.solar_max_temp
 
 -- scale to 1 second intervals
 

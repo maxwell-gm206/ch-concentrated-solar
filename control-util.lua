@@ -52,7 +52,6 @@ end
 ---@return LuaEntity?
 ---@nodiscard
 control_util.getTowerForMirror = function(mirror)
-
 	if global.mirror_tower[mirror.unit_number] then
 		local tower = global.mirror_tower[mirror.unit_number].tower
 
@@ -69,7 +68,6 @@ end
 ---@nodiscard
 --- Distance from `mirror` to it's tower
 control_util.distance_to_tower = function(mirror)
-
 	local tower = control_util.getTowerForMirror(mirror)
 
 	if tower then
@@ -91,7 +89,6 @@ control_util.linkMirrorToTowerIfCloser = function(inputs)
 	local tower = control_util.getTowerForMirror(inputs.mirror)
 
 	if tower and tower.valid then
-
 		local curDist = control_util.dist_sqr(inputs.mirror.position, tower.position)
 
 		local newDist = control_util.dist_sqr(inputs.mirror.position, inputs.tower.position)
@@ -107,46 +104,11 @@ control_util.linkMirrorToTowerIfCloser = function(inputs)
 			control_util.mark_in_range(inputs.mirror.unit_number, inputs.tower)
 		end
 	else
-
 		control_util.linkMirrorToTower(inputs)
 	end
-
 end
 
 
-
----@param inputs {tower:LuaEntity, mirror:LuaEntity, ttl:uint?, mirrored:boolean?, blend : number?}
----@return LuaEntity?
----@nodiscard
---- Create a beam from a `mirror` to a `tower`, lasting for `ttl`
-control_util.generateBeam = function(inputs)
-	local name
-
-	if inputs.mirrored == nil or inputs.mirrored then
-		name = control_util.mod_prefix .. "mirrored-solar-beam"
-	else
-		name = control_util.mod_prefix .. "solar-beam"
-	end
-
-	local source = control_util.towerTarget(inputs.tower)
-	local target = inputs.mirror.position
-
-	target.y = target.y - 0.5
-	local blend = inputs.blend or 0.9
-	-- shift towards mirror a little
-	source.x = source.x * blend + target.x * (1 - blend)
-	source.y = source.y * blend + target.y * (1 - blend)
-
-
-	return inputs.mirror.surface.create_entity {
-		position = target,
-		name = name,
-		raise_built = false,
-		duration = inputs.ttl or 0,
-		target_position = target,
-		source_position = source
-	}
-end
 
 ---@param tower LuaEntity
 ---@return MapPosition
@@ -158,7 +120,6 @@ end
 ---@return LuaEntity?
 ---@nodiscard
 control_util.closestTower = function(inputs)
-
 	local bestTower = nil
 	local bestDistance = nil
 	for _, tower in pairs(inputs.towers) do
@@ -185,7 +146,6 @@ end
 ---@return LuaEntity[]
 ---@nodiscard
 control_util.find_towers_around_entity = function(inputs)
-
 	return inputs.entity.surface.find_entities_filtered {
 		name = tower_names,
 		force = inputs.entity.force,
@@ -237,7 +197,6 @@ end
 --- Link a mirror and a tower, rotating the mirror to point in the correct direction
 --- `all_in_range` - all towers in range of the mirror, assigned to `[mid]=in_range` if mirror is new
 control_util.linkMirrorToTower = function(args)
-
 	local tower = args.tower
 	local mirror = args.mirror
 
@@ -266,7 +225,6 @@ control_util.linkMirrorToTower = function(args)
 		control_util.mark_out_range(mid, tower)
 		-- Link in the mirror -> tower direction
 		global.mirror_tower[mid].tower = tower
-
 	else
 		global.mirror_tower[mid] = {
 			tower = tower,
@@ -298,19 +256,8 @@ control_util.linkMirrorToTower = function(args)
 	local y = mirror.position.y - tower.position.y
 
 	mirror.orientation = math.atan2(y, x) * 0.15915494309 - 0.25
-
-
 end
 
-control_util.delete_all_beams = function()
-	for _, surf in pairs(game.surfaces) do
-		beams = surf.find_entities_filtered { name = control_util.mod_prefix .. "mirrored-solar-beam" }
-		for _, beam in pairs(beams) do
-			beam.destroy()
-		end
-	end
-
-end
 
 
 
@@ -347,20 +294,17 @@ end
 control_util.buildTrees = function()
 	print("Generating tower relations")
 
-	--control_util.delete_all_beams()
+	--beams.delete_all_beams()
 
 	--control_util.consistencyCheck()
 
 	for _, surface in pairs(game.surfaces) do
-
 		local towers = surface.find_entities_filtered({ name = tower_names });
 
 		if towers then
 			for _, tower in pairs(towers) do
-
 				-- Mark each tower as new
 				control_util.on_built_entity_callback(tower, game.tick + 1)
-
 			end
 		end
 	end
@@ -387,7 +331,6 @@ control_util.removeMirrorFromTower = function(args)
 
 	-- Destroy beams if we have them
 	if global.mirror_tower[mirror.unit_number].beam then
-
 		--game.print("removing mirror beam")
 
 		global.mirror_tower[mirror.unit_number].beam.destroy()
@@ -411,16 +354,14 @@ end
 
 control_util.consistencyCheck = function()
 	for tid, mirrors in pairs(global.tower_mirrors) do
-
 		if not global.towers[tid] or not global.towers[tid].valid then
-
 			control_util.notify_tower_invalid(tid)
 
 			log("NOT CONSISTENT: tower " .. tid .. " ref to invalid tower")
-
 		else
 			for _, mirror in pairs(mirrors) do
-				assert(global.mirror_tower[mirror.unit_number], "NOT CONSISTENT: tower->mirror->tower relation does not exist")
+				assert(global.mirror_tower[mirror.unit_number],
+					"NOT CONSISTENT: tower->mirror->tower relation does not exist")
 
 				assert(global.mirror_tower[mirror.unit_number].tower.unit_number == tid,
 					"NOT CONSISTENT: mirror points to multiple towers")
@@ -464,7 +405,6 @@ control_util.notify_tower_invalid = function(tid)
 		-- need at least 2 near towers for this to work for at least some of the mirrors
 
 		for mid, mirror in pairs(global.tower_mirrors[tid]) do
-
 			if global.mirror_tower[mid] and global.mirror_tower[mid].in_range then
 				local tower = control_util.closestTower {
 					towers = global.mirror_tower[mid].in_range,
@@ -473,7 +413,6 @@ control_util.notify_tower_invalid = function(tid)
 				}
 
 				if tower then
-
 					control_util.linkMirrorToTower {
 						mirror = mirror,
 						tower = tower
@@ -504,7 +443,6 @@ end
 ---@param entity LuaEntity
 ---@param tick uint
 control_util.on_built_entity_callback = function(entity, tick)
-
 	assert(entity, "Called back with nil entity")
 	assert(tick, "Called back with nil tick")
 
@@ -529,7 +467,6 @@ control_util.on_built_entity_callback = function(entity, tick)
 					tower = tower,
 					all_in_range = control_util.convert_to_indexed_table(towers)
 				}
-
 			else
 				-- Handle case with no towers in range
 				game.get_player(1).create_local_flying_text {
@@ -540,9 +477,7 @@ control_util.on_built_entity_callback = function(entity, tick)
 					speed = 1.0,
 				}
 			end
-
 		elseif control_util.isTower(entity.name) then
-
 			--get mirrors in radius around us
 			local mirrors = control_util.find_mirrors_around_entity { entity = entity }
 
@@ -572,19 +507,19 @@ control_util.on_tower_count_changed = function()
 	print(table_size(global.tower_mirrors) .. " " .. global.tower_update_count)
 end
 
-control_util.update_settings = function()
-	control_util.tower_update_interval = settings.global["tower-update-interval"].value
-	control_util.tower_full_update_time = settings.global["full-tower-update-time"].value
-	control_util.beam_update_interval = settings.global["beam-update-interval"].value
-	control_util.beam_full_update_time = settings.global["full-beam-update-time"].value
+-- Variables for how often towers are updated
+-- Interval is time between update bursts
+-- Full update is time for these bursts to updated ALL towers
+-- Update Fraction is what proportion of towers to update in each burst
 
-	control_util.tower_update_fraction = control_util.tower_update_interval / control_util.tower_full_update_time
-	control_util.beam_update_fraction = control_util.beam_update_interval / control_util.beam_full_update_time
+control_util.tower_update_interval = 12
+control_util.tower_full_update_time = 60
+control_util.beam_update_interval = 120
+control_util.beam_full_update_time = 600
 
+control_util.tower_update_fraction = control_util.tower_update_interval / control_util.tower_full_update_time
+control_util.beam_update_fraction = control_util.beam_update_interval / control_util.beam_full_update_time
 
-end
-
-control_util.update_settings()
 
 
 

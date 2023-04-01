@@ -4,8 +4,8 @@ local hit_effects = require("__base__.prototypes.entity.hit-effects")
 
 require("util")
 
-local tower_shift = { 0, -(17 / 2 - 2.5) }
-local tower_size = { x = 5, y = 17 }
+local tower_shift         = { 0, -(17 / 2 - 2.5) }
+local tower_size          = { x = 5, y = 17 }
 
 local tower_collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } }
 local tower_selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } }
@@ -16,28 +16,25 @@ data:extend {
 		type = "reactor",
 		name = data_util.mod_prefix .. "solar-power-tower",
 		icon = data_util.sprite "solar-power-tower-icon.png",
-		icon_size = 64, icon_mipmaps = 4,
+		icon_size = 64,
+		icon_mipmaps = 4,
 		flags = { "placeable-neutral", "player-creation" },
 		minable = { mining_time = 1, result = data_util.mod_prefix .. "solar-power-tower" },
 		max_health = 500,
 		corpse = "medium-remnants",
 		dying_explosion = "nuclear-reactor-explosion",
-
 		radius_visualisation_specification = {
 			sprite = { filename = data_util.sprite "solar-power-tower-radius-visualisation.png", size = 12 },
 			distance = data_util.tower_capture_radius
 		},
-
 		--- ENERGY
 
 
-		consumption = data_util.solar_max_production_kw / 1000 .. "MW",
-		scale_energy_usage = true,
-		neighbour_bonus = 0,
-
-		energy_source =
+		consumption            = data_util.solar_max_production_mw .. "MW",
+		scale_energy_usage     = true,
+		neighbour_bonus        = 0,
+		energy_source          =
 		{
-
 			type = "fluid",
 			fluid_box = {
 				base_area           = data_util.solar_max_temp,
@@ -67,15 +64,13 @@ data:extend {
 				color = { 0, 0, 0 }
 			}
 		},
-		collision_box = tower_collision_box,
-		selection_box = tower_selection_box,
-		drawing_box   = tower_drawing_box,
-
+		collision_box          = tower_collision_box,
+		selection_box          = tower_selection_box,
+		drawing_box            = tower_drawing_box,
 		damaged_trigger_effect = hit_effects.entity(),
-
 		--- GRAPHICS
 
-		picture =
+		picture                =
 		{
 			layers =
 			{
@@ -103,8 +98,7 @@ data:extend {
 				}
 			}
 		},
-
-		working_light_picture = data_util.auto_hr {
+		working_light_picture  = data_util.auto_hr {
 			filename = "solar-power-tower-working",
 			blend_mode = "additive",
 			draw_as_glow = true,
@@ -113,12 +107,11 @@ data:extend {
 			shift = { 0, -12.35 },
 		},
 		-- add a light to smooth out the effects of all the incoming beams
-		light = { intensity = 0.6, size = 9.9, shift = { 0.0, -12.35 } },
-
+		light                  = { intensity = 0.6, size = 9.9, shift = { 0.0, -12.35 } },
 		-- use_fuel_glow_color = false, -- should use glow color from fuel item prototype as light color and tint for working_light_picture
 		-- default_fuel_glow_color = { 0, 1, 0, 1 } -- color used as working_light_picture tint for fuels that don't have glow color defined
 
-		heat_buffer =
+		heat_buffer            =
 		{
 			max_temperature = data_util.solar_max_temp,
 			specific_heat = "500KJ",
@@ -175,7 +168,6 @@ data:extend {
 					direction = defines.direction.west
 				}
 			},
-
 			heat_picture = apply_heat_pipe_glow(data_util.auto_hr
 				{
 					filename = "solar-power-tower-heated",
@@ -184,9 +176,8 @@ data:extend {
 					shift = tower_shift,
 				}),
 		},
-
 		--- HEAT PIPE CONNECTION TEXTURES
-		lower_layer_picture =
+		lower_layer_picture    =
 		{
 			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes.png",
 			width = 156,
@@ -201,23 +192,21 @@ data:extend {
 				shift = util.by_pixel(-1, -5)
 			}
 		},
-
-
 		heat_lower_layer_picture = apply_heat_pipe_glow
-		{
-			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes-heated.png",
-			width = 156,
-			height = 156,
-			shift = util.by_pixel(-3, -4),
-			hr_version =
 			{
-				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes-heated.png",
-				width = 320,
-				height = 316,
-				scale = 0.5,
-				shift = util.by_pixel(-0.5, -4.5)
-			}
-		},
+				filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes-heated.png",
+				width = 156,
+				height = 156,
+				shift = util.by_pixel(-3, -4),
+				hr_version =
+				{
+					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes-heated.png",
+					width = 320,
+					height = 316,
+					scale = 0.5,
+					shift = util.by_pixel(-0.5, -4.5)
+				}
+			},
 		connection_patches_connected =
 		{
 			sheet =
@@ -236,7 +225,6 @@ data:extend {
 				}
 			}
 		},
-
 		connection_patches_disconnected =
 		{
 			sheet =
@@ -257,45 +245,43 @@ data:extend {
 				}
 			}
 		},
-
 		heat_connection_patches_connected =
 		{
 			sheet = apply_heat_pipe_glow
-			{
-				filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches-heated.png",
-				width = 32,
-				height = 32,
-				variation_count = 12,
-				hr_version =
 				{
-					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches-heated.png",
-					width = 64,
-					height = 64,
+					filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches-heated.png",
+					width = 32,
+					height = 32,
 					variation_count = 12,
-					scale = 0.5
+					hr_version =
+					{
+						filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches-heated.png",
+						width = 64,
+						height = 64,
+						variation_count = 12,
+						scale = 0.5
+					}
 				}
-			}
 		},
-
 		heat_connection_patches_disconnected =
 		{
 			sheet = apply_heat_pipe_glow
-			{
-				filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches-heated.png",
-				width = 32,
-				height = 32,
-				variation_count = 12,
-				y = 32,
-				hr_version =
 				{
-					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches-heated.png",
-					width = 64,
-					height = 64,
+					filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches-heated.png",
+					width = 32,
+					height = 32,
 					variation_count = 12,
-					y = 64,
-					scale = 0.5
+					y = 32,
+					hr_version =
+					{
+						filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches-heated.png",
+						width = 64,
+						height = 64,
+						variation_count = 12,
+						y = 64,
+						scale = 0.5
+					}
 				}
-			}
 		},
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
 		close_sound = { filename = "__base__/sound/machine-close.ogg", volume = 0.75 },
