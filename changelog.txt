@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.3.0
-Date: 2023.04.01
+Version: 1.0.0
+Date: 2023.04.02
   Major Features:
     - Custom GUI for interacting with towers.
   Features:
-    - Beam graphics can now be disabled.
+    - Beam graphics can now be disabled. Must be done server-wide, as beams are rendered as game entities.
     - Tower energy production can now be customized.
-  Bugfixes:
-    - Removed old debug settings.
+    - Removed old debug settings. 
+    - K2 power multiplier instead of hard set 110MW.
   Info:
     - 1000 downloads (thanks!)
 ---------------------------------------------------------------------------------------------------

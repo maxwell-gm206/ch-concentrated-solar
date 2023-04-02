@@ -6,8 +6,8 @@ This mod adds concentrated solar power to Factorio, in two components:
 
 - **Heliostat Mirrors** - A mirror that rotates to send 110KW of solar power to the closest tower within their range of 35 tiles.
 - **Solar Towers**
-	- Including the Solar Power Tower, which turns solar energy into up to 60MW of heat.
-	- The Solar Laser Tower, which concentrates solar energy into up to 60MW of solar devastation.
+    - Including the Solar Power Tower, which turns solar energy into up to 60MW of heat.
+    - The Solar Laser Tower, which concentrates solar energy into up to 60MW of solar devastation.
 
 ![banner art](non_mod/banner2.png)
 
@@ -17,14 +17,6 @@ Most work is done on building placement and deletion, then each group of a singl
 
 ## Mod Compatibility
 
-### K2
-
-- Power buff to 110MW
-- Researched after advanced solar panels
-- Tweaked crafting recipes (included glass, lithium-chloride, etc.)
-
-### Space Exploration
-
-- Towers can be placed in space
-- Requires space science packs
-- K2+SE support to merge tech changes
+- **Glass** - adds glass and other ingredients to recipes when available.
+- **K2** - 1.9 times power multiplier (changeable in settings), Tweaked crafting recipes (included glass, lithium-chloride, etc.).
+- **Space Exploration** - Towers can be placed in space, requires space science.
