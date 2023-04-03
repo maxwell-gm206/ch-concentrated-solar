@@ -83,33 +83,34 @@ script.on_event(
 		end
 
 		local entity = event.entity
+		local eid = entity.unit_number
 
 
 		--game.print("entity " .. entity.unit_number .. " destroyed")
 
-		if db.valid_mid(entity.unit_number) then
+		if db.valid_mid(eid) then
 			--game.print("Removing mirror")
 
 			-- if this mirror is connected to a tower
-			if global.mirrors[entity.unit_number].tower then
+			if global.mirrors[eid].tower then
 				-- remove this mirror from our tower's list
 				-- and remove the reference from this mirror to the tower
 
 				--game.print("Removing mirror from tower")
 
 				db.removeMirrorFromTower {
-					tower = global.mirrors[entity.unit_number].tower,
-					mirror = entity }
+					tid = global.mirrors[eid].tower.unit_number,
+					mid = eid }
 			else
 				--game.print("Removed mirror with no tower")
 			end
 
-			global.mirrors[entity.unit_number] = nil
+			global.mirrors[eid] = nil
 
 
 			ui.update_guis()
-		elseif db.valid_tid(entity.unit_number) then
-			db.notify_tower_invalid(entity.unit_number)
+		elseif db.valid_tid(eid) then
+			db.notify_tower_invalid(eid)
 
 			ui.update_guis()
 		end
