@@ -27,13 +27,13 @@ db.on_init = function()
 end
 
 
-
+-- catch all functions for if a tid or mid is safe to use
 
 db.valid_tid = function(tid)
-	return global.towers[tid] and global.towers[tid].tower and global.towers[tid].tower.valid
+	return tid and global.towers[tid] and global.towers[tid].tower and global.towers[tid].tower.valid
 end
 db.valid_mid = function(mid)
-	return global.mirrors[mid] and global.mirrors[mid].mirror and global.mirrors[mid].mirror.valid
+	return mid and global.mirrors[mid] and global.mirrors[mid].mirror and global.mirrors[mid].mirror.valid
 end
 
 ---@param inputs {towers:LuaEntity[], position:Vector, ignore_id : number?}
@@ -82,7 +82,7 @@ db.linkMirrorToTower = function(args)
 				--add the previous link to in_range
 				db.mark_in_range(mid, global.mirrors[mid].tower)
 				-- Clean up previous link
-				db.removeMirrorFromTower { mirror = mirror, tower = global.mirrors[mid].tower }
+				db.removeMirrorFromTower { mid = mid, tid = global.mirrors[mid].tower.unit_number }
 			end
 		end
 		-- If this tower was marked in range before, remove it
@@ -165,11 +165,11 @@ db.notify_tower_invalid = function(tid)
 	-- Remove every mirror -> tower relation
 
 	for mid, mirror in pairs(global.towers[tid].mirrors) do
-		db.removeMirrorFromTower { tid = tid, mirror = mirror, clearTowerMirrorsRelation = false }
+		db.removeMirrorFromTower { mid = mid }
 
-		-- Find new targets for orphaned mirrors
+		-- Find new targets for orphaned mirrors, if it still exists
 
-		if global.mirrors[mid] and global.mirrors[mid].in_range then
+		if db.valid_mid(mid) and global.mirrors[mid].in_range then
 			local tower = db.closestTower {
 				towers = global.mirrors[mid].in_range,
 				position = mirror.position,
@@ -280,18 +280,15 @@ db.buildTrees = function()
 end
 
 
-
----@param args {tower:LuaEntity?, tid : number? , mirror:LuaEntity, clearTowerMirrorsRelation:boolean?}
+-- If we don't want to remove the mirror from the tower's list of mirrors
+-- (tower destroyed), simply do not include the tid in calling
+---@param args { tid : number?  , mid:number}
 db.removeMirrorFromTower = function(args)
 	-- unpack and verify arguments
 
-	if not args.mirror then return end
-	if not (args.tid or args.tower) then return end
+	if not db.valid_mid(args.mid) then return end
 
-
-	local mirror = args.mirror
-	local mid = mirror.unit_number
-	local tid = args.tid or args.tower.unit_number
+	local mid = args.mid
 
 	--assert(global.mirrors[mid].tower.unit_number == tid,
 
@@ -306,10 +303,10 @@ db.removeMirrorFromTower = function(args)
 	global.mirrors[mid].tower = nil
 
 
-	if args.clearTowerMirrorsRelation == nil or args.clearTowerMirrorsRelation then
+	if args.tid then
 		-- Remove tower -> mirrors relation
 		-- Skip this step for deleting a tower, when entire relation can be removed at once later
-		global.towers[tid].mirrors[mid] = nil
+		global.towers[args.tid].mirrors[mid] = nil
 
 
 		--control_util.consistencyCheck()

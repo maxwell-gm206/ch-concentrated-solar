@@ -15,7 +15,7 @@ highlight.cursor_stack_changed = function(event)
 		global.player_tower_rect[event.player_index] = global.player_tower_rect[event.player_index] or {}
 
 		for tid, td in pairs(global.towers) do
-			if not global.player_tower_rect[event.player_index][tid] then
+			if td.tower and td.tower.valid and not global.player_tower_rect[event.player_index][tid] then
 				global.player_tower_rect[event.player_index][tid] = rendering.draw_rectangle {
 					draw_on_ground = true,
 					color = { r = 0.12 * 0.2, g = 0.457 * 0.2, b = 0.593 * 0.2, a = 0.1 },
