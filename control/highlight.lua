@@ -14,13 +14,13 @@ highlight.cursor_stack_changed = function(event)
 		-- Ensure table exists, but do not overwrite - possible for this to be called multiple times in a row
 		global.player_tower_rect[event.player_index] = global.player_tower_rect[event.player_index] or {}
 
-		for tid, tower in pairs(global.towers) do
+		for tid, td in pairs(global.towers) do
 			if not global.player_tower_rect[event.player_index][tid] then
 				global.player_tower_rect[event.player_index][tid] = rendering.draw_rectangle {
 					draw_on_ground = true,
 					color = { r = 0.12 * 0.2, g = 0.457 * 0.2, b = 0.593 * 0.2, a = 0.1 },
-					left_top = tower,
-					right_bottom = tower,
+					left_top = td.tower,
+					right_bottom = td.tower,
 					left_top_offset = {
 						x = -control_util.tower_capture_radius,
 						y = -control_util.tower_capture_radius
@@ -31,7 +31,7 @@ highlight.cursor_stack_changed = function(event)
 					},
 					filled = true,
 					players = { event.player_index },
-					surface = tower.surface
+					surface = td.tower.surface
 				}
 			end
 		end
@@ -61,7 +61,7 @@ highlight.selected_entity_changed = function(event)
 	end
 	--create new boxes?
 	if player.selected and player.selected.name == control_util.heliostat_mirror then
-		local td = global.mirror_tower[player.selected.unit_number]
+		local td = global.mirrors[player.selected.unit_number]
 
 		if td and td.tower and td.tower.valid then
 			global.player_boxes[event.player_index] = player.selected.surface.create_entity {

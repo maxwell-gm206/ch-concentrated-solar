@@ -2,21 +2,22 @@ local nthtick = {}
 
 local control_util = require "control-util"
 local beams = require "control.beams"
+local db = require "control.database"
 
 nthtick.on_nth_tick_beam_update = function(event)
 	--control_util.consistencyCheck()
 
 	--beams.delete_all_beams()
 
-	if not global.tower_mirrors[global.last_updated_tower_beam] then
+	if not global.towers[global.last_updated_tower_beam] then
 		global.last_updated_tower_beam = nil
 	end
 
 	for i = 1, global.tower_beam_update_count or 1, 1 do
-		global.last_updated_tower_beam = next(global.tower_mirrors, global.last_updated_tower_beam)
+		global.last_updated_tower_beam = next(global.towers, global.last_updated_tower_beam)
 
 		if global.last_updated_tower_beam then
-			local tower = global.towers[global.last_updated_tower_beam]
+			local tower = global.towers[global.last_updated_tower_beam].tower
 			local sid = tower.surface.index
 
 			--log("Generating beams on " .. data.surface.name)
@@ -30,23 +31,23 @@ nthtick.on_nth_tick_beam_update = function(event)
 			local ttl = math.abs(tower.surface.evening - tower.surface.dawn) * tower.surface.ticks_per_day
 
 			--game.print("New sun stage " .. stage .. " with life of " .. ttl)
-			for mid, mirror in pairs(global.tower_mirrors[global.last_updated_tower_beam]) do
+			for mid, mirror in pairs(global.towers[global.last_updated_tower_beam].mirrors) do
 				-- Can only spawn sun rays on mirrors with towers
 
 				local group = (mid * 29) % control_util.mirror_groups
 
-				if group <= stage and global.mirror_tower[mid].beam == nil then
+				if group <= stage and global.mirrors[mid].beam == nil then
 					-- at this point, we dont need to worry about the old beams,
 					-- as they have been destroyed
-					global.mirror_tower[mid].beam = beams.generateBeam
+					global.mirrors[mid].beam = beams.generateBeam
 						{
 							mirror = mirror,
 							tower = tower,
 							ttl = ttl
 						}
-				elseif group > stage and global.mirror_tower[mid].beam then
-					global.mirror_tower[mid].beam.destroy()
-					global.mirror_tower[mid].beam = nil
+				elseif group > stage and global.mirrors[mid].beam then
+					global.mirrors[mid].beam.destroy()
+					global.mirrors[mid].beam = nil
 				end
 			end
 		end
@@ -59,23 +60,23 @@ nthtick.on_nth_tick_tower_update = function(event)
 
 	-- Place fluid in towers
 
-	if not global.tower_mirrors[global.last_updated_tower] then
+	if not global.towers[global.last_updated_tower] then
 		global.last_updated_tower = nil
 	end
 
 	for i = 1, global.tower_update_count or 1, 1 do
-		global.last_updated_tower = next(global.tower_mirrors, global.last_updated_tower)
+		global.last_updated_tower = next(global.towers, global.last_updated_tower)
 
 		if global.last_updated_tower then
 			local tid = global.last_updated_tower
-			local mirrors = global.tower_mirrors[tid]
+			local mirrors = global.towers[tid].mirrors
 
 
 			--print("Updating tower " .. tid)
 
-			local tower = global.towers[tid]
+			local tower = global.towers[tid].tower
 
-			if tower and tower.valid then
+			if db.valid_tid(tid) then
 				--print("updating tower " .. tid)
 				local sun = control_util.calc_sun(tower.surface)
 
@@ -92,7 +93,7 @@ nthtick.on_nth_tick_tower_update = function(event)
 				end
 			else
 				--print("Deleting tower " .. tid)
-				control_util.notify_tower_invalid(tid)
+				db.notify_tower_invalid(tid)
 			end
 		end
 	end

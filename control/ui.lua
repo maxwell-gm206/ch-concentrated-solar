@@ -104,8 +104,14 @@ end
 
 
 ui.update_gui = function(gui)
-	local mirrors = global.tower_mirrors[gui.tags.tid]
-	local tower = global.towers[gui.tags.tid]
+	if not global.towers[gui.tags.tid] then
+		gui.destroy()
+		return
+	end
+
+
+	local mirrors = global.towers[gui.tags.tid].mirrors
+	local tower = global.towers[gui.tags.tid].tower
 	if not tower then
 		gui.destroy();
 		return
