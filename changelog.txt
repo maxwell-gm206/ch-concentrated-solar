@@ -3,6 +3,8 @@ Version: 0.3.1
 Date: 2023.04.03
   Changes:
     - More resilliant global tables, with migration.
+    - Fixed crash a surface was deleted that contained towers and mirrors.
+    - Updated GUI to clarify heat rather then electric power.
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.0
 Date: 2023.04.02
