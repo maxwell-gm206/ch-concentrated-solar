@@ -6,16 +6,16 @@ local control_util = require "control-util"
 db.on_init = function()
 	-- Ensure every global table used exists
 
-	---@type  {[integer] : MirrorTowerRelation}
+	---@type  {[uint] : MirrorTowerRelation}
 	global.mirrors = global.mirrors or {}
 
-	---@type {[integer] : {tower:LuaEntity, mirrors: {[integer] : LuaEntity}}}
+	---@type {[uint] : {tower:LuaEntity, mirrors: {[uint] : LuaEntity}}}
 	global.towers = global.towers or {}
 
-	---@type {[integer] : LuaEntity}
+	---@type {[uint] : LuaEntity}
 	global.player_boxes = global.player_boxes or {}
 
-	---@type {[integer] : LuaEntity}
+	---@type {[uint] : LuaEntity}
 	global.player_tower_rect = global.player_tower_rect or {}
 
 
@@ -28,10 +28,13 @@ end
 
 
 -- catch all functions for if a tid or mid is safe to use
-
+---@param tid uint?
+---@nodiscard
 db.valid_tid = function(tid)
 	return tid and global.towers[tid] and global.towers[tid].tower and global.towers[tid].tower.valid
 end
+---@param mid uint?
+---@nodiscard
 db.valid_mid = function(mid)
 	return mid and global.mirrors[mid] and global.mirrors[mid].mirror and global.mirrors[mid].mirror.valid
 end
@@ -134,9 +137,10 @@ db.linkMirrorToTowerIfCloser = function(inputs)
 		return
 	end
 
+	-- tower is valid if not nil
 	local tower = db.getTowerForMirror(inputs.mirror)
 
-	if tower and tower.valid then
+	if tower then
 		local curDist = control_util.dist_sqr(inputs.mirror.position, tower.position)
 
 		local newDist = control_util.dist_sqr(inputs.mirror.position, inputs.tower.position)
@@ -157,7 +161,7 @@ db.linkMirrorToTowerIfCloser = function(inputs)
 end
 
 
----@param tid number
+---@param tid uint
 db.notify_tower_invalid = function(tid)
 	-- Delete a tower from the database
 	--game.print("tower " .. entity.unit_number .. " destroyed")
@@ -282,7 +286,7 @@ end
 
 -- If we don't want to remove the mirror from the tower's list of mirrors
 -- (tower destroyed), simply do not include the tid in calling
----@param args { tid : number?  , mid:number}
+---@param args { tid : uint?  , mid:uint}
 db.removeMirrorFromTower = function(args)
 	-- unpack and verify arguments
 
@@ -317,7 +321,7 @@ end
 
 db.consistencyCheck = function()
 	for tid, mirrors in pairs(global.towers) do
-		if not global.towers[tid] or not global.towers[tid].tower.valid then
+		if not db.valid_tid(tid) then
 			db.notify_tower_invalid(tid)
 
 			log("NOT CONSISTENT: tower " .. tid .. " ref to invalid tower")

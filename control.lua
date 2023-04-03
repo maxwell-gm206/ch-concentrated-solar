@@ -82,29 +82,21 @@ script.on_event(
 			db.buildTrees()
 		end
 
-		local entity = event.entity
-		local eid = entity.unit_number
-
-
-		--game.print("entity " .. entity.unit_number .. " destroyed")
+		local eid = event.entity.unit_number
 
 		if db.valid_mid(eid) then
-			--game.print("Removing mirror")
-
 			-- if this mirror is connected to a tower
 			if global.mirrors[eid].tower then
 				-- remove this mirror from our tower's list
 				-- and remove the reference from this mirror to the tower
 
-				--game.print("Removing mirror from tower")
 
 				db.removeMirrorFromTower {
 					tid = global.mirrors[eid].tower.unit_number,
 					mid = eid }
-			else
-				--game.print("Removed mirror with no tower")
 			end
 
+			--Lone mirrors have no data that needs to be cleaned up
 			global.mirrors[eid] = nil
 
 
