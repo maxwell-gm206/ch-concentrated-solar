@@ -2,7 +2,7 @@ local highlight = {}
 
 local control_util = require "control-util"
 
-highlight.cursor_stack_changed = function(event)
+function highlight.cursor_stack_changed(event)
 	-- Generate structure if not exists - remove eventually, but keep for backwards compat
 	global.player_tower_rect = global.player_tower_rect or {}
 
@@ -45,7 +45,7 @@ highlight.cursor_stack_changed = function(event)
 	end
 end
 
-highlight.selected_entity_changed = function(event)
+function highlight.selected_entity_changed(event)
 	local player = game.get_player(event.player_index)
 
 	if player == nil then

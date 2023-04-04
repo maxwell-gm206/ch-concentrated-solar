@@ -6,7 +6,7 @@ local control_util = require "control-util"
 ---@return LuaEntity?
 ---@nodiscard
 --- Create a beam from a `mirror` to a `tower`, lasting for `ttl`
-beams.generateBeam = function(inputs)
+function beams.generateBeam(inputs)
 	local name
 
 	if inputs.mirrored == nil or inputs.mirrored then
@@ -35,7 +35,7 @@ beams.generateBeam = function(inputs)
 	}
 end
 
-beams.delete_all_beams = function()
+function beams.delete_all_beams()
 	for _, surf in pairs(game.surfaces) do
 		beams = surf.find_entities_filtered { name = control_util.mod_prefix .. "mirrored-solar-beam" }
 		for _, beam in pairs(beams) do
@@ -43,6 +43,5 @@ beams.delete_all_beams = function()
 		end
 	end
 end
-
 
 return beams

@@ -4,7 +4,7 @@ local control_util = require "control-util"
 local beams = require "control.beams"
 local db = require "control.database"
 
-nthtick.on_nth_tick_beam_update = function(event)
+function nthtick.on_nth_tick_beam_update(event)
 	--control_util.consistencyCheck()
 
 	--beams.delete_all_beams()
@@ -54,7 +54,7 @@ nthtick.on_nth_tick_beam_update = function(event)
 	end
 end
 
-nthtick.on_nth_tick_tower_update = function(event)
+function nthtick.on_nth_tick_tower_update(event)
 	--control_util.buildTrees()
 	--control_util.consistencyCheck()
 

@@ -3,7 +3,7 @@ local tower_laser = {}
 local control_util = require "control-util"
 local beams = require "control.beams"
 
-tower_laser.on_entity_damaged = function(event)
+function tower_laser.on_entity_damaged(event)
 	--game.print("script triggered effect!")
 
 	if event.effect_id == control_util.mod_prefix .. "sunlight-laser-damage" then
@@ -27,7 +27,7 @@ tower_laser.on_entity_damaged = function(event)
 	end
 end
 
-tower_laser.on_script_triggered_effect = function(event)
+function tower_laser.on_script_triggered_effect(event)
 	--game.print("script triggered effect!")
 
 	if event.effect_id == control_util.mod_prefix .. "sunlight-laser-damage" then

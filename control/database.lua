@@ -3,7 +3,7 @@ local db = {}
 local control_util = require "control-util"
 
 
-db.on_init = function()
+function db.on_init()
 	-- Ensure every global table used exists
 
 	---@type  {[uint] : MirrorTowerRelation}
@@ -26,23 +26,23 @@ db.on_init = function()
 	game.print(control_util.mod_prefix .. "welcome")
 end
 
-
 -- catch all functions for if a tid or mid is safe to use
 ---@param tid uint?
 ---@nodiscard
-db.valid_tid = function(tid)
+function db.valid_tid(tid)
 	return tid and global.towers[tid] and global.towers[tid].tower and global.towers[tid].tower.valid
 end
+
 ---@param mid uint?
 ---@nodiscard
-db.valid_mid = function(mid)
+function db.valid_mid(mid)
 	return mid and global.mirrors[mid] and global.mirrors[mid].mirror and global.mirrors[mid].mirror.valid
 end
 
 ---@param inputs {towers:LuaEntity[], position:Vector, ignore_id : number?}
 ---@return LuaEntity?
 ---@nodiscard
-db.closestTower = function(inputs)
+function db.closestTower(inputs)
 	local bestTower = nil
 	local bestDistance = nil
 	for _, tower in pairs(inputs.towers) do
@@ -63,7 +63,7 @@ end
 ---@param args {mirror:LuaEntity, tower:LuaEntity, all_in_range : LuaEntity[]? }
 --- Link a mirror and a tower, rotating the mirror to point in the correct direction
 --- `all_in_range` - all towers in range of the mirror, assigned to `[mid]=in_range` if mirror is new
-db.linkMirrorToTower = function(args)
+function db.linkMirrorToTower(args)
 	local tower = args.tower
 	local mirror = args.mirror
 
@@ -127,11 +127,10 @@ db.linkMirrorToTower = function(args)
 	mirror.orientation = math.atan2(y, x) * 0.15915494309 - 0.25
 end
 
-
 ---@param inputs MirrorTower
 --- run `linkMirrorToTower` if the new tower has a distance lower than the original
 --- and store the tower as in range is it is
-db.linkMirrorToTowerIfCloser = function(inputs)
+function db.linkMirrorToTowerIfCloser(inputs)
 	-- Only link towers and mirrors if they have the same force
 	if inputs.mirror.force.name ~= inputs.tower.force.name then
 		return
@@ -160,9 +159,8 @@ db.linkMirrorToTowerIfCloser = function(inputs)
 	end
 end
 
-
 ---@param tid uint
-db.notify_tower_invalid = function(tid)
+function db.notify_tower_invalid(tid)
 	-- Delete a tower from the database
 	--game.print("tower " .. entity.unit_number .. " destroyed")
 
@@ -207,8 +205,7 @@ db.notify_tower_invalid = function(tid)
 	db.on_tower_count_changed()
 end
 
-
-db.on_tower_count_changed = function()
+function db.on_tower_count_changed()
 	global.tower_update_count = math.ceil(table_size(global.towers) * control_util.tower_update_fraction)
 	global.tower_beam_update_count = math.ceil(table_size(global.towers) * control_util.beam_update_fraction)
 
@@ -218,7 +215,7 @@ end
 ---@param mirror LuaEntity
 ---@return LuaEntity?
 ---@nodiscard
-db.getTowerForMirror = function(mirror)
+function db.getTowerForMirror(mirror)
 	if global.mirrors[mirror.unit_number] then
 		local tower = global.mirrors[mirror.unit_number].tower
 
@@ -234,7 +231,7 @@ end
 ---@return number
 ---@nodiscard
 --- Distance from `mirror` to it's tower
-db.distance_to_tower = function(mirror)
+function db.distance_to_tower(mirror)
 	local tower = db.getTowerForMirror(mirror)
 
 	if tower then
@@ -244,7 +241,7 @@ db.distance_to_tower = function(mirror)
 	end
 end
 
-db.mark_in_range = function(mid, tower)
+function db.mark_in_range(mid, tower)
 	if global.mirrors[mid].in_range then
 		global.mirrors[mid].in_range[tower.unit_number] = tower
 	else
@@ -252,16 +249,13 @@ db.mark_in_range = function(mid, tower)
 	end
 end
 
-db.mark_out_range = function(mid, tower)
+function db.mark_out_range(mid, tower)
 	if global.mirrors[mid] and global.mirrors[mid].in_range then
 		global.mirrors[mid].in_range[tower.unit_number] = nil
 	end
 end
 
-
-
-
-db.buildTrees = function()
+function db.buildTrees()
 	print("Generating tower relations")
 
 	--beams.delete_all_beams()
@@ -283,11 +277,10 @@ db.buildTrees = function()
 	db.consistencyCheck()
 end
 
-
 -- If we don't want to remove the mirror from the tower's list of mirrors
 -- (tower destroyed), simply do not include the tid in calling
 ---@param args { tid : uint?  , mid:uint}
-db.removeMirrorFromTower = function(args)
+function db.removeMirrorFromTower(args)
 	-- unpack and verify arguments
 
 	if not db.valid_mid(args.mid) then return end
@@ -319,7 +312,7 @@ db.removeMirrorFromTower = function(args)
 	--control_util.consistencyCheck()
 end
 
-db.consistencyCheck = function()
+function db.consistencyCheck()
 	for tid, mirrors in pairs(global.towers) do
 		if not db.valid_tid(tid) then
 			db.notify_tower_invalid(tid)
@@ -348,10 +341,9 @@ db.consistencyCheck = function()
 	end
 end
 
-
 ---@param entity LuaEntity
 ---@param tick uint
-db.on_built_entity_callback = function(entity, tick)
+function db.on_built_entity_callback(entity, tick)
 	assert(entity, "Called back with nil entity")
 	assert(tick, "Called back with nil tick")
 

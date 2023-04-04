@@ -16,27 +16,26 @@ local control_util = require "shared-util"
 tower_names = {}
 is_tower = {}
 
-control_util.registerTowerName = function(name)
+function control_util.registerTowerName(name)
 	is_tower[name] = true
 	table.insert(tower_names, name)
 end
 
-control_util.isTower = function(name)
+function control_util.isTower(name)
 	return is_tower[name] ~= nil
 end
 
-
-control_util.dist_sqr = function(p1, p2)
+function control_util.dist_sqr(p1, p2)
 	return (p1.x - p2.x) ^ 2 + (p1.y - p2.y) ^ 2
 end
 
 ---@nodiscard
-control_util.inv_lerp = function(a, b, v)
+function control_util.inv_lerp(a, b, v)
 	return math.max(math.min((v - a) / (b - a), 1), 0)
 end
 
 ---@nodiscard
-control_util.calc_sun = function(surface)
+function control_util.calc_sun(surface)
 	if surface.daytime > surface.evening then
 		--game.print("morning!")
 		return control_util.inv_lerp(surface.morning, surface.dawn, surface.daytime)
@@ -46,7 +45,7 @@ control_util.calc_sun = function(surface)
 	end
 end
 
-control_util.average_daylight = function(surface)
+function control_util.average_daylight(surface)
 	-- Ticks for 3 regions of time
 	local ticks_sunset = (surface.evening - surface.dusk)
 	local ticks_night = (surface.morning - surface.evening)
@@ -59,21 +58,13 @@ control_util.average_daylight = function(surface)
 	return (day_length + ticks_sunset / 2 + ticks_sunrise / 2)
 end
 
-
-
-
-
-
-
 ---@param tower LuaEntity
 ---@return MapPosition
-control_util.towerTarget = function(tower)
+function control_util.towerTarget(tower)
 	return { x = tower.position.x, y = tower.position.y - 13 }
 end
 
-
-
-control_util.get_tower_catch_area = function(inputs)
+function control_util.get_tower_catch_area(inputs)
 	return { { inputs.tower.position.x - inputs.radius, inputs.tower.position.y - inputs.radius },
 		{ inputs.tower.position.x + inputs.radius, inputs.tower.position.y + inputs.radius } }
 end
@@ -81,7 +72,7 @@ end
 ---@param inputs {entity:LuaEntity, radius:number? }
 ---@return LuaEntity[]
 ---@nodiscard
-control_util.find_towers_around_entity = function(inputs)
+function control_util.find_towers_around_entity(inputs)
 	return inputs.entity.surface.find_entities_filtered {
 		name = tower_names,
 		force = inputs.entity.force,
@@ -94,7 +85,7 @@ end
 ---@param inputs {entity:LuaEntity, radius:number? }
 ---@return LuaEntity[]
 ---@nodiscard
-control_util.find_mirrors_around_entity = function(inputs)
+function control_util.find_mirrors_around_entity(inputs)
 	return inputs.entity.surface.find_entities_filtered {
 		name = control_util.heliostat_mirror,
 		force = inputs.entity.force,
@@ -107,22 +98,13 @@ control_util.find_mirrors_around_entity = function(inputs)
 	}
 end
 
-
-
-control_util.convert_to_indexed_table = function(array)
+function control_util.convert_to_indexed_table(array)
 	t = {}
 	for _, e in pairs(array) do
 		t[e.unit_number] = e
 	end
 	return t
 end
-
-
-
-
-
-
-
 
 -- Variables for how often towers are updated
 -- Interval is time between update bursts
