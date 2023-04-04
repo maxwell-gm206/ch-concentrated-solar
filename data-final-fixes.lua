@@ -3,7 +3,7 @@ data_util = require "data-util"
 if mods["Krastorio2"] then
 	data.raw["turret"]["chcs-heliostat-mirror"].fast_replaceable_group = "solar-panel"
 
-	table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].prerequisites, "kr-advanced-solar-panel")
+	data_util.add_prerequisite("chcs-concentrated-solar-energy", "kr-advanced-solar-panel")
 	-- Power buff comes at cost of more expensive research
 end
 
@@ -25,24 +25,19 @@ if mods["space-exploration"] then
 	data.raw.item["chcs-heliostat-mirror"].subgroup = "solar"
 	data.raw.item["chcs-heliostat-mirror"].order = "d[solar-panel]-b[heliostat-mirror]-a"
 
-	table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].unit.ingredients,
-		{ "space-science-pack", 1 })
+	data_util.add_research_ingredient("chcs-concentrated-solar-energy", "space-science-pack")
+	data_util.add_research_ingredient("chcs-weaponized-solar-energy", "space-science-pack")
 
-	table.insert(data.raw["technology"]["chcs-weaponized-solar-energy"].unit.ingredients, { "space-science-pack", 1 })
-
-	table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].prerequisites, "space-science-pack")
+	data_util.add_prerequisite("chcs-concentrated-solar-energy", "space-science-pack")
 
 	if mods["Krastorio2"] then
-		table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].prerequisites, "kr-optimization-tech-card")
-		table.insert(data.raw["technology"]["chcs-weaponized-solar-energy"].prerequisites, "kr-optimization-tech-card")
+		data_util.add_prerequisite("chcs-concentrated-solar-energy", "kr-optimization-tech-card")
+		data_util.add_prerequisite("chcs-weaponized-solar-energy", "kr-optimization-tech-card")
 	end
 else
 	if mods["Krastorio2"] then
 		-- only add production to non-space
-		table.insert(data.raw["technology"]["chcs-concentrated-solar-energy"].unit.ingredients,
-			{ "production-science-pack", 1 })
-
-		table.insert(data.raw["technology"]["chcs-weaponized-solar-energy"].unit.ingredients,
-		{ "production-science-pack", 1 })
+		data_util.add_research_ingredient("chcs-concentrated-solar-energy", "production-science-pack")
+		data_util.add_research_ingredient("chcs-weaponized-solar-energy", "production-science-pack")
 	end
 end
