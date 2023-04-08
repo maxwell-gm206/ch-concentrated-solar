@@ -4,7 +4,7 @@ local control_util = require "control-util"
 
 
 ui.on_gui_opened = function(event)
-	if event.gui_type == defines.gui_type.entity and event.entity.name == control_util.solar_power_tower then
+	if event.gui_type == defines.gui_type.entity and event.entity and event.entity.name == control_util.solar_power_tower then
 		local player = game.get_player(event.player_index)
 		local main_frame = player.gui.screen.add {
 			type = "frame",
@@ -89,7 +89,7 @@ ui.on_gui_closed = function(event)
 end
 
 ui.on_gui_click = function(event)
-	if event.element.name == "chcs-solar-tower-x-button" then
+	if event.element and event.element.name == "chcs-solar-tower-x-button" then
 		event.element.parent.parent.destroy()
 	end
 end

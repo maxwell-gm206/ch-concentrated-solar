@@ -1,7 +1,7 @@
 data_util = require "data-util"
 
 if mods["Krastorio2"] then
-	data.raw["turret"]["chcs-heliostat-mirror"].fast_replaceable_group = "solar-panel"
+	data.raw.turret["chcs-heliostat-mirror"].fast_replaceable_group = "solar-panel"
 
 	data_util.add_prerequisite("chcs-concentrated-solar-energy", "kr-advanced-solar-panel")
 	-- Power buff comes at cost of more expensive research
@@ -9,8 +9,8 @@ end
 
 
 if mods["space-exploration"] then
-	data.raw["turret"]["chcs-heliostat-mirror"].se_allow_in_space = true
-	data.raw["reactor"]["chcs-solar-power-tower"].se_allow_in_space = true
+	data.raw.turret["chcs-heliostat-mirror"].se_allow_in_space = true
+	data.raw.reactor["chcs-solar-power-tower"].se_allow_in_space = true
 
 	-- Place solar-y objects with other SE solar objects
 	data.raw.recipe["chcs-solar-power-tower"].subgroup = "solar"
