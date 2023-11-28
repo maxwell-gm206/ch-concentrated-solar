@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.3
+Date: 2023.11.28
+  Changes:
+    - Major boost to laser tower range.
+    - Removed dependancy on nuclear power - research now also contains all required heat related equipment.
+    - Respect surface.solar_power_multiplier, both when calculating mirror contribution to a tower, and in the maximum mirrors readout in GUI (and when placing a new tower).
+---------------------------------------------------------------------------------------------------
 Version: 0.3.2
 Date: 2023.04.08
   Changes:

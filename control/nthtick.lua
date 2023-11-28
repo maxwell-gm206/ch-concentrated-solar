@@ -71,7 +71,6 @@ function nthtick.on_nth_tick_tower_update(event)
 			local tid = global.last_updated_tower
 			local mirrors = global.towers[tid].mirrors
 
-
 			--print("Updating tower " .. tid)
 
 			local tower = global.towers[tid].tower
@@ -83,7 +82,8 @@ function nthtick.on_nth_tick_tower_update(event)
 				tower.clear_fluid_inside()
 
 				if sun > 0 and table_size(mirrors) > 0 then
-					local amount = control_util.fluidTempPerMirror * sun * table_size(mirrors)
+					local amount = tower.surface.solar_power_multiplier * control_util.fluidTempPerMirror * sun *
+						table_size(mirrors)
 					-- set to temprature and amount, as fluid turrets cannot display temperature
 					tower.insert_fluid {
 						name        = control_util.mod_prefix .. "solar-fluid",

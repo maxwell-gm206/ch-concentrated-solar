@@ -2,7 +2,7 @@ local data_util = require "data-util"
 
 local mirror_ingredients =
 {
-	{ "steel-plate", 5 },
+	{ "steel-plate",        5 },
 	{ "electronic-circuit", 5 },
 }
 local laser_tower_ingredients =
@@ -11,7 +11,7 @@ local laser_tower_ingredients =
 }
 local power_tower_ingredients =
 {
-	{ "concrete", 500 },
+	{ "concrete",    500 },
 	{ "steel-plate", 400 },
 }
 
@@ -42,11 +42,9 @@ if data.raw.item["lithium-chloride"] then
 end
 
 if mods["Krastorio2"] then
-
 	table.insert(power_tower_ingredients, { "heat-pipe", 20 })
 	table.insert(power_tower_ingredients, { "copper-plate", 300 })
 else
-
 	table.insert(power_tower_ingredients, { "copper-plate", 400 })
 end
 

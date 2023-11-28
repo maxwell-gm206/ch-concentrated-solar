@@ -3,8 +3,8 @@ local data_util = require("data-util")
 data:extend {
 
 	{
-		type  = "turret",
-		name  = data_util.mod_prefix .. "heliostat-mirror",
+		type = "turret",
+		name = data_util.mod_prefix .. "heliostat-mirror",
 		flags = { "placeable-neutral", "player-creation" },
 
 		icon = data_util.sprite "heliostat-mirror-icon.png",
@@ -26,11 +26,15 @@ data:extend {
 		friendly_map_color   = data.raw["utility-constants"]["default"].chart.default_friendly_color_by_type["solar-panel"],
 		max_health           = 150,
 		corpse               = 'medium-small-remnants',
+
+		-- SE Compat
+		se_allow_in_space    = true,
+
 		collision_box        = { { -1.1, -1.1 }, { 1.2, 1.2 } },
 		selection_box        = { { -1.5, -1.5 }, { 1.5, 1.5 } },
 		drawing_box          = { { -1.5, -2 }, { 1.5, 1.5 } },
 
-		base_picture = {
+		base_picture         = {
 			layers = {
 				data_util.auto_hr {
 					filename = "heliostat-mirror-turret-base",
@@ -54,7 +58,7 @@ data:extend {
 			}
 		},
 
-		folded_animation = {
+		folded_animation     = {
 			layers = {
 				data_util.auto_hr {
 					direction_count = 32,

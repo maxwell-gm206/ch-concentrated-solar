@@ -32,7 +32,17 @@ shared_util.sun_stages = 20
 -- Number of sets of mirrors, used to spawn sun-rays
 shared_util.mirror_groups = 100
 
+-- Number of mirrors required to saturate a tower on a solar intensity 1 world.
 ---@type uint
-shared_util.max_mirrors_per_tower = math.ceil(shared_util.solar_max_temp / shared_util.fluidTempPerMirror)
+local max_mirrors_per_tower = math.ceil(shared_util.solar_max_temp / shared_util.fluidTempPerMirror)
+
+-- Maximum mirrors to fully saturate a tower, based on the solar power multiplier of its surface.
+-- Tower can be any reference entity, as long as it is on the current surface
+---@nodiscard
+---@param surface LuaSurface
+---@return number
+function shared_util.tower_max_mirrors(surface)
+	return math.ceil(max_mirrors_per_tower / surface.solar_power_multiplier)
+end
 
 return shared_util

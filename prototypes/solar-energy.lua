@@ -2,10 +2,11 @@ local data_util = require("data-util")
 
 local solar_beam_blend_mode = "additive"
 
+local beam_non_light_flags = { "trilinear-filtering" }
+
 local mirrored_solar_beam = {
 	filename = data_util.sprite "mirrored-solar-beam.png",
 	flags = beam_non_light_flags,
-
 	width = 64,
 	height = 64,
 	frame_count = 1,

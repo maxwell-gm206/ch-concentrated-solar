@@ -89,8 +89,6 @@ script.on_event(
 			if global.mirrors[eid].tower then
 				-- remove this mirror from our tower's list
 				-- and remove the reference from this mirror to the tower
-
-
 				db.removeMirrorFromTower {
 					tid = global.mirrors[eid].tower.unit_number,
 					mid = eid }
@@ -98,7 +96,6 @@ script.on_event(
 
 			--Lone mirrors have no data that needs to be cleaned up
 			global.mirrors[eid] = nil
-
 
 			ui.update_guis()
 		elseif db.valid_tid(eid) then

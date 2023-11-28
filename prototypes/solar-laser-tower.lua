@@ -73,6 +73,8 @@ data:extend {
 		corpse = "medium-remnants",
 		dying_explosion = "laser-turret-explosion",
 
+		-- SE Compat
+		se_allow_in_space = true,
 
 		fluid_box =
 		{
@@ -93,7 +95,7 @@ data:extend {
 			fluid_consumption = 1,
 			warmup = 10,
 			cooldown = data_util.solar_laser_ticks_between_shots - 10,
-			range = 50,
+			range = 150,
 			min_range = 6,
 			turn_range = 1.5 / 3.0,
 			--source_direction_count = 64,
@@ -142,8 +144,8 @@ data:extend {
 			layers =
 			{
 				solar_laser_turret_extension { frame_count = 1, line_length = 1 },
-				--laser_turret_extension_shadow { frame_count = 1, line_length = 1 },
-				--laser_turret_extension_mask { frame_count = 1, line_length = 1 }
+				--solar_laser_turret_extension_shadow { frame_count = 1, line_length = 1 },
+				--solar_laser_turret_extension_mask { frame_count = 1, line_length = 1 }
 			}
 		},
 		preparing_animation =
@@ -151,8 +153,8 @@ data:extend {
 			layers =
 			{
 				solar_laser_turret_extension {},
-				--laser_turret_extension_shadow {},
-				--laser_turret_extension_mask {}
+				--solar_laser_turret_extension_shadow {},
+				--solar_laser_turret_extension_mask {}
 			}
 		},
 		prepared_animation =
@@ -160,8 +162,8 @@ data:extend {
 			layers =
 			{
 				solar_laser_turret_shooting(),
-				--laser_turret_shooting_shadow(),
-				--laser_turret_shooting_mask()
+				--solar_laser_turret_shooting_shadow(),
+				--solar_laser_turret_shooting_mask()
 			}
 		},
 		--attacking_speed = 0.1,
@@ -172,8 +174,8 @@ data:extend {
 			layers =
 			{
 				solar_laser_turret_extension { run_mode = "backward" },
-				--laser_turret_extension_shadow { run_mode = "backward" },
-				--laser_turret_extension_mask { run_mode = "backward" }
+				--solar_laser_turret_extension_shadow { run_mode = "backward" },
+				--solar_laser_turret_extension_mask { run_mode = "backward" }
 			}
 		},
 		base_picture_render_layer = "higher-object-under",

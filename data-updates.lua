@@ -9,9 +9,6 @@ end
 
 
 if mods["space-exploration"] then
-	data.raw.turret["chcs-heliostat-mirror"].se_allow_in_space = true
-	data.raw.reactor["chcs-solar-power-tower"].se_allow_in_space = true
-
 	-- Place solar-y objects with other SE solar objects
 	data.raw.recipe["chcs-solar-power-tower"].subgroup = "solar"
 	data.raw.recipe["chcs-solar-power-tower"].order = "d[solar-panel]-b[solar-power-tower]-a"

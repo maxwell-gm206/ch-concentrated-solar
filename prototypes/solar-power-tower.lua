@@ -27,6 +27,10 @@ data:extend {
 			sprite = { filename = data_util.sprite "solar-power-tower-radius-visualisation.png", size = 12 },
 			distance = data_util.tower_capture_radius
 		},
+
+		-- SE Compat
+		se_allow_in_space = true,
+
 		--- ENERGY
 
 
@@ -117,6 +121,7 @@ data:extend {
 			specific_heat = "500KJ",
 			max_transfer = "10GW",
 			minimum_glow_temperature = 250,
+			-- Same as nuclear reactor
 			connections =
 			{
 				{
