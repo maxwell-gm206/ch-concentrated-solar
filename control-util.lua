@@ -69,20 +69,22 @@ function control_util.get_tower_catch_area(inputs)
 		{ inputs.tower.position.x + inputs.radius, inputs.tower.position.y + inputs.radius } }
 end
 
----@param inputs {entity:LuaEntity, radius:number? }
+---@param inputs { entity:LuaEntity, radius:number? }
 ---@return LuaEntity[]
 ---@nodiscard
 function control_util.find_towers_around_entity(inputs)
 	return inputs.entity.surface.find_entities_filtered {
 		name = tower_names,
 		force = inputs.entity.force,
-		area = control_util.get_tower_catch_area { tower = inputs.entity,
+		area = control_util.get_tower_catch_area {
+			tower = inputs.entity,
 			-- Reduce radius by 2 to account for the size of the tower's base collider
-			radius = (inputs.radius or control_util.tower_capture_radius) - 2 }
+			radius = (inputs.radius or control_util.tower_capture_radius) - 2,
+		}
 	}
 end
 
----@param inputs {entity:LuaEntity, radius:number? }
+---@param inputs { entity:LuaEntity, radius:number? }
 ---@return LuaEntity[]
 ---@nodiscard
 function control_util.find_mirrors_around_entity(inputs)
@@ -118,7 +120,6 @@ control_util.beam_full_update_time = 600
 
 control_util.tower_update_fraction = control_util.tower_update_interval / control_util.tower_full_update_time
 control_util.beam_update_fraction = control_util.beam_update_interval / control_util.beam_full_update_time
-
 
 
 

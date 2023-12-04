@@ -61,13 +61,7 @@ script.on_event(
 	tower_laser.on_entity_damaged
 )
 
-
-
-
-
-
 -- ON ENTITY REMOVED
-
 
 script.on_event(
 	{
@@ -83,6 +77,10 @@ script.on_event(
 		end
 
 		local eid = event.entity.unit_number
+
+		if eid == nil then
+			return
+		end
 
 		if db.valid_mid(eid) then
 			-- if this mirror is connected to a tower

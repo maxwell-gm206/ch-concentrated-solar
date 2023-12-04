@@ -6,6 +6,11 @@ local control_util = require "control-util"
 ui.on_gui_opened = function(event)
 	if event.gui_type == defines.gui_type.entity and event.entity and event.entity.name == control_util.solar_power_tower then
 		local player = game.get_player(event.player_index)
+
+		if player == nil then
+			return
+		end
+
 		local main_frame = player.gui.screen.add {
 			type = "frame",
 			name = "solar_tower_main_frame",
