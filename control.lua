@@ -66,12 +66,12 @@ script.on_event(
 script.on_event(
 	{
 		defines.events.on_pre_player_mined_item,
-		defines.events.on_robot_pre_mined,
+		defines.events.on_robot_mined_entity,
 		defines.events.on_entity_died,
 		defines.events.script_raised_destroy
 	},
 	function(event)
-		--game.print("Somthing was removed")
+		-- game.print("Somthing was removed")
 		if global.towers == nil then
 			db.buildTrees()
 		end
@@ -151,7 +151,7 @@ do
 	script.set_event_filter(defines.events.on_built_entity, filters)
 	script.set_event_filter(defines.events.on_robot_built_entity, filters)
 
-	script.set_event_filter(defines.events.on_robot_pre_mined, filters)
+	script.set_event_filter(defines.events.on_robot_mined_entity, filters)
 	script.set_event_filter(defines.events.on_pre_player_mined_item, filters)
 end
 

@@ -73,10 +73,12 @@ function db.linkMirrorToTower(args)
 
 	local mid = mirror.unit_number
 
-
 	if db.valid_mid(mid) then
 		if global.mirrors[mid].tower then
 			-- If this mirror has a tower, do something about it
+
+			assert(global.mirrors[mid].tower.valid,
+				"DATABASE CORRUPTION: Mirror is linked to an invalid tower")
 
 			if global.mirrors[mid].tower.unit_number == tower.unit_number then
 				-- We are already linked to this tower!
@@ -347,7 +349,7 @@ function db.on_built_entity_callback(entity, tick)
 	assert(entity, "Called back with nil entity")
 	assert(tick, "Called back with nil tick")
 
-	--game.print("Somthing was built")
+	-- game.print("Somthing was built")
 
 	if global.mirrors == nil then
 		db.buildTrees()
