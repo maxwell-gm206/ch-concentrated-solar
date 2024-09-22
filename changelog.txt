@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.4
+Date: 2024.09.22
+  Changes:
+    - Fix bots rotating the tower crashing mod
+    - Introduce remote interface for towers and max_mirrors per surface (thanks TheKingJo)
+---------------------------------------------------------------------------------------------------
 Version: 0.3.3
 Date: 2023.11.28
   Changes:

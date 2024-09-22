@@ -11,7 +11,7 @@ remote.add_interface("ch-concentrated-solar", {
 		return towers
 	end,
 
-	max_mirrors = control_util.tower_max_mirrors,
+	max_mirrors = control_util.surface_max_mirrors,
 })
 
 function db.on_init()

@@ -157,7 +157,7 @@ ui.update_gui = function(gui)
 	content_flow.mirrors.caption = {
 		'ch-gui.mirrors',
 		mirror_count,
-		control_util.tower_max_mirrors(surface)
+		control_util.surface_max_mirrors(surface)
 	}
 
 	content_flow.current_power.caption = { 'ch-gui.current-power', math.floor(current_production * 100) / 100 }

@@ -96,7 +96,7 @@ function control_util.find_mirrors_around_entity(inputs)
 			-- reduce radius by 1 to account of size of mirror's base collider
 			radius = (inputs.radius or control_util.tower_capture_radius) - 1,
 		},
-		limit = control_util.tower_max_mirrors(inputs.entity.surface),
+		limit = control_util.surface_max_mirrors(inputs.entity.surface),
 	}
 end
 
