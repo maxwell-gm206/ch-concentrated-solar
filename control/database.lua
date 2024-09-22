@@ -2,6 +2,17 @@ local db = {}
 
 local control_util = require "control-util"
 
+remote.add_interface("ch-concentrated-solar", {
+	towers = function()
+		local towers = {}
+		for number, tower in pairs(global.towers) do
+			towers[number] = { entity = tower.tower, mirror_count = table_size(tower.mirrors) }
+		end
+		return towers
+	end,
+
+	max_mirrors = control_util.tower_max_mirrors,
+})
 
 function db.on_init()
 	-- Ensure every global table used exists
