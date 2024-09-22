@@ -2,22 +2,18 @@ local db = {}
 
 local control_util = require "control-util"
 
-
-local shared_util = require "shared-util"
 remote.add_interface("ch-concentrated-solar", {
-    towers = function()
+	towers = function()
 		local towers = {}
-		for number,tower in pairs(global.towers) do
-			towers[number] = {entity = tower.tower, mirrors = table_size(tower.mirrors)}
+		for number, tower in pairs(global.towers) do
+			towers[number] = { entity = tower.tower, mirror_count = table_size(tower.mirrors) }
 		end
 		return towers
 	end,
-	
-    maxMirrors = function()
-		return math.ceil(shared_util.solar_max_temp / shared_util.fluidTempPerMirror)
-	end,
+
+	max_mirrors = control_util.tower_max_mirrors,
 })
-  
+
 function db.on_init()
 	-- Ensure every global table used exists
 
