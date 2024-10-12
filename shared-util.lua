@@ -21,7 +21,7 @@ shared_util.tower_capture_radius = 35
 shared_util.tower_capture_radius_sqr = shared_util.tower_capture_radius ^ 2
 
 
-shared_util.solar_laser_ticks_between_shots = 60
+shared_util.solar_laser_ticks_between_shots = 1
 
 
 

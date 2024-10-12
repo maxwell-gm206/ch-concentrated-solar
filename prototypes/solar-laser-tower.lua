@@ -10,7 +10,7 @@ local function solar_laser_turret_extension(inputs)
 	return data_util.auto_hr {
 		filename = "solar-laser-tower-raise",
 		priority = "medium",
-		size = 32 * 3,
+		size = 64 * 3,
 		frame_count = inputs.frame_count or 15,
 		line_length = inputs.line_length or 0,
 		run_mode = inputs.run_mode or "forward",
@@ -42,8 +42,8 @@ local function solar_laser_turret_shooting()
 	return data_util.auto_hr {
 		filename = "solar-laser-tower-fire",
 		line_length = 8,
-		width = 32 * 3,
-		height = 32 * 3,
+		width = 64 * 3,
+		height = 64 * 3,
 		frame_count = 1,
 		direction_count = 64,
 		scale = 1.5,
@@ -78,8 +78,7 @@ data:extend {
 
 		fluid_box =
 		{
-			base_area        = data_util.solar_max_temp,
-			height           = 0.01,
+			volume           = data_util.solar_max_temp,
 			pipe_connections = {},
 			production_type  = "input",
 			filter           = data_util.mod_prefix .. "solar-fluid"
@@ -90,50 +89,61 @@ data:extend {
 
 		attack_parameters =
 		{
-			type = "stream",
-			fluids = { { type = data_util.mod_prefix .. "solar-fluid" } },
-			fluid_consumption = 1,
-			warmup = 10,
-			cooldown = data_util.solar_laser_ticks_between_shots - 10,
-			range = 150,
-			min_range = 6,
-			turn_range = 1.5 / 3.0,
+			type              = "stream",
+			fluids            = { { type = data_util.mod_prefix .. "solar-fluid" } },
+			-- fluid_consumption = 1,
+			-- warmup = 1,
+			cooldown          = 1,
+			range             = 150,
+			min_range         = 6,
+			turn_range        = 1.5 / 3.0,
+			fluid_consumption = 10,
 			--source_direction_count = 64,
 			--source_offset = { 0, -3.423489 / 4 },
-			damage_modifier = 1,
-			ammo_type =
+			ammo_category     = "laser",
+			damage_modifier   = 1,
+			ammo_type         =
 			{
-				category = "beam",
-				energy_consumption = "800kJ",
-				target_type = "entity",
 				action =
 				{
-					type = "direct",
-					action_delivery =
 					{
-						type = "instant",
-						--beam = data_util.mod_prefix .. "solar-beam",
-						--max_length = 50,
-						--duration = ticks_between_shots - 1,
-						--source_offset = { 0, -13 },
-						target_effects = {
-							--{
-							--	type = "create-fire",
-							--	entity_name = "fire-flame",
-							--	check_buildability = true
-							--},
+						type = "area",
+						radius = 2.5,
+						action_delivery =
+						{
+							type = "instant",
+							target_effects =
 							{
-								type = "script",
-								effect_id = data_util.mod_prefix .. "sunlight-laser-damage"
-							},
-							{
-								type = "damage",
-								damage = {
-									amount = 500,
-									type = "laser"
+								{
+									type = "damage",
+									damage = { amount = 3, type = "laser" },
+									apply_damage_to_trees = false
 								}
 							}
 						}
+					},
+					{
+						type = "direct",
+						action_delivery =
+						{
+							type = "beam",
+							beam = data_util.mod_prefix .. "solar-beam",
+							max_length = 50,
+							duration = 30,
+							source_offset = { 0, -13 },
+							target_effects = {
+								{
+									type = "create-fire",
+									entity_name = "fire-flame",
+									check_buildability = true
+								},
+								-- {
+								-- 	type = "script",
+								-- 	effect_id = data_util.mod_prefix .. "sunlight-laser-damage"
+								-- },
+
+							}
+						},
 					}
 				}
 			}
@@ -180,52 +190,59 @@ data:extend {
 		},
 		base_picture_render_layer = "higher-object-under",
 		gun_animation_render_layer = "higher-object-above",
-		base_picture =
-		{
-			layers =
-			{
-				data_util.auto_hr {
-					filename = "solar-laser-tower",
-					width = 32 * tower_base_size.x,
-					height = 32 * tower_base_size.y,
-					shift = tower_base_shift,
-					priority = "high",
-					direction_count = 1,
-					frame_count = 1,
-				},
+		graphics_set = {
+			base_visualisation = {
+
+				animation =
 				{
-					filename = data_util.sprite "solar-laser-tower-shadow.png",
-					width = 672,
-					height = 109,
-					shift = { 8, 0.5 },
-					draw_as_shadow = true,
-					priority = "high",
-					direction_count = 1,
-					frame_count = 1,
-					--hr_version =
-					--{
-					--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-base-shadow.png",
-					--	line_length = 1,
-					--	width = 132,
-					--	height = 82,
-					--	draw_as_shadow = true,
-					--	direction_count = 1,
-					--	frame_count = 1,
-					--	shift = util.by_pixel(6, 3),
-					--	scale = 0.5
-					--}
-				},
-				data_util.auto_hr {
-					filename = "solar-laser-tower-mask",
-					width = 32 * tower_base_size.x,
-					height = 32 * tower_base_size.y,
-					shift = tower_base_shift,
-					flags = { "mask" },
-					priority = "high",
-					axially_symmetrical = false,
-					apply_runtime_tint = true,
-					direction_count = 1,
-					frame_count = 1,
+					north = {
+						layers =
+						{
+							data_util.auto_hr {
+								filename = "solar-laser-tower",
+								width = 64 * tower_base_size.x,
+								height = 64 * tower_base_size.y,
+								shift = tower_base_shift,
+								priority = "high",
+								direction_count = 1,
+								frame_count = 1,
+							},
+							{
+								filename = data_util.sprite "solar-laser-tower-shadow.png",
+								width = 672,
+								height = 109,
+								shift = { 8, 0.5 },
+								draw_as_shadow = true,
+								priority = "high",
+								direction_count = 1,
+								frame_count = 1,
+								--hr_version =
+								--{
+								--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-base-shadow.png",
+								--	line_length = 1,
+								--	width = 132,
+								--	height = 82,
+								--	draw_as_shadow = true,
+								--	direction_count = 1,
+								--	frame_count = 1,
+								--	shift = util.by_pixel(6, 3),
+								--	scale = 0.5
+								--}
+							},
+							data_util.auto_hr {
+								filename = "solar-laser-tower-mask",
+								width = 64 * tower_base_size.x,
+								height = 64 * tower_base_size.y,
+								shift = tower_base_shift,
+								flags = { "mask" },
+								priority = "high",
+								axially_symmetrical = false,
+								apply_runtime_tint = true,
+								direction_count = 1,
+								frame_count = 1,
+							}
+						}
+					}
 				}
 			}
 		},

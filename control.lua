@@ -3,7 +3,6 @@
 local control_util = require "control-util"
 local highlight    = require "control.highlight"
 local nthtick      = require "control.nthtick"
-local tower_laser  = require "control.tower-laser"
 local ui           = require "control.ui"
 local db           = require "control.database"
 local util         = require "util"
@@ -26,17 +25,10 @@ script.on_nth_tick(60, ui.update_guis)
 -- ON ENTITY ADDED
 script.on_event(
 	{
+		defines.events.script_raised_built,
+		defines.events.script_raised_revive,
 		defines.events.on_built_entity,
 		defines.events.on_robot_built_entity,
-	},
-	function(event)
-		db.on_built_entity_callback(event.created_entity, event.tick)
-	end
-)
-script.on_event(
-	{
-		defines.events.script_raised_built,
-		defines.events.script_raised_revive
 	},
 	function(event)
 		db.on_built_entity_callback(event.entity, event.tick)
@@ -47,18 +39,6 @@ script.on_event(
 script.on_event(
 	{ defines.events.on_selected_entity_changed },
 	highlight.selected_entity_changed
-)
-
-
-
-script.on_event(
-	{ defines.events.on_script_trigger_effect },
-	tower_laser.on_script_trigger_effect
-)
-
-script.on_event(
-	defines.events.on_entity_damaged,
-	tower_laser.on_entity_damaged
 )
 
 -- ON ENTITY REMOVED
@@ -72,7 +52,7 @@ script.on_event(
 	},
 	function(event)
 		-- game.print("Somthing was removed")
-		if global.towers == nil then
+		if storage.towers == nil then
 			db.buildTrees()
 		end
 
@@ -84,16 +64,16 @@ script.on_event(
 
 		if db.valid_mid(eid) then
 			-- if this mirror is connected to a tower
-			if global.mirrors[eid].tower then
+			if storage.mirrors[eid].tower then
 				-- remove this mirror from our tower's list
 				-- and remove the reference from this mirror to the tower
 				db.removeMirrorFromTower {
-					tid = global.mirrors[eid].tower.unit_number,
+					tid = storage.mirrors[eid].tower.unit_number,
 					mid = eid }
 			end
 
 			--Lone mirrors have no data that needs to be cleaned up
-			global.mirrors[eid] = nil
+			storage.mirrors[eid] = nil
 
 			ui.update_guis()
 		elseif db.valid_tid(eid) then

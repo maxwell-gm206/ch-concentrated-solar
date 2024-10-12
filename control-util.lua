@@ -1,7 +1,7 @@
 local control_util = require "shared-util"
 
 ---@type Global
---global = global
+--storage = storage
 
 ---@type LuaGameScript
 --game = game

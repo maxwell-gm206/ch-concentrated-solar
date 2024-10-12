@@ -2,7 +2,7 @@ local data_util = require "data-util"
 
 local prerequisites = {
 	"concrete",
-	"advanced-electronics",
+	"advanced-circuit",
 	"solar-energy",
 	"laser",
 }

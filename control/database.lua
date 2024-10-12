@@ -5,7 +5,7 @@ local control_util = require "control-util"
 remote.add_interface("ch-concentrated-solar", {
 	towers = function()
 		local towers = {}
-		for number, tower in pairs(global.towers) do
+		for number, tower in pairs(storage.towers) do
 			towers[number] = { entity = tower.tower, mirror_count = table_size(tower.mirrors) }
 		end
 		return towers
@@ -15,19 +15,19 @@ remote.add_interface("ch-concentrated-solar", {
 })
 
 function db.on_init()
-	-- Ensure every global table used exists
+	-- Ensure every storage table used exists
 
 	---@type  {[uint] : MirrorTowerRelation}
-	global.mirrors = global.mirrors or {}
+	storage.mirrors = storage.mirrors or {}
 
 	---@type {[uint] : {tower:LuaEntity, mirrors: {[uint] : LuaEntity}}}
-	global.towers = global.towers or {}
+	storage.towers = storage.towers or {}
 
 	---@type {[uint] : LuaEntity}
-	global.player_boxes = global.player_boxes or {}
+	storage.player_boxes = storage.player_boxes or {}
 
 	---@type {[uint] : LuaEntity}
-	global.player_tower_rect = global.player_tower_rect or {}
+	storage.player_tower_rect = storage.player_tower_rect or {}
 
 
 	--control_util.buildTrees()
@@ -41,13 +41,13 @@ end
 ---@param tid uint?
 ---@nodiscard
 function db.valid_tid(tid)
-	return tid and global.towers[tid] and global.towers[tid].tower and global.towers[tid].tower.valid
+	return tid and storage.towers[tid] and storage.towers[tid].tower and storage.towers[tid].tower.valid
 end
 
 ---@param mid uint?
 ---@nodiscard
 function db.valid_mid(mid)
-	return mid and global.mirrors[mid] and global.mirrors[mid].mirror and global.mirrors[mid].mirror.valid
+	return mid and storage.mirrors[mid] and storage.mirrors[mid].mirror and storage.mirrors[mid].mirror.valid
 end
 
 ---@param inputs {towers:LuaEntity[], position:Vector, ignore_id : number?}
@@ -85,28 +85,28 @@ function db.linkMirrorToTower(args)
 	local mid = mirror.unit_number
 
 	if db.valid_mid(mid) then
-		if global.mirrors[mid].tower then
+		if storage.mirrors[mid].tower then
 			-- If this mirror has a tower, do something about it
 
-			assert(global.mirrors[mid].tower.valid,
+			assert(storage.mirrors[mid].tower.valid,
 				"DATABASE CORRUPTION: Mirror is linked to an invalid tower")
 
-			if global.mirrors[mid].tower.unit_number == tower.unit_number then
+			if storage.mirrors[mid].tower.unit_number == tower.unit_number then
 				-- We are already linked to this tower!
 				return
 			else
 				--add the previous link to in_range
-				db.mark_in_range(mid, global.mirrors[mid].tower)
+				db.mark_in_range(mid, storage.mirrors[mid].tower)
 				-- Clean up previous link
-				db.removeMirrorFromTower { mid = mid, tid = global.mirrors[mid].tower.unit_number }
+				db.removeMirrorFromTower { mid = mid, tid = storage.mirrors[mid].tower.unit_number }
 			end
 		end
 		-- If this tower was marked in range before, remove it
 		db.mark_out_range(mid, tower)
 		-- Link in the mirror -> tower direction
-		global.mirrors[mid].tower = tower
+		storage.mirrors[mid].tower = tower
 	else
-		global.mirrors[mid] = {
+		storage.mirrors[mid] = {
 			tower = tower,
 			mirror = mirror,
 			in_range = args.all_in_range
@@ -120,17 +120,17 @@ function db.linkMirrorToTower(args)
 
 	-- Link in the tower -> mirrors direction
 
-	if not global.towers[tower.unit_number] then
-		global.towers[tower.unit_number] = {
+	if not storage.towers[tower.unit_number] then
+		storage.towers[tower.unit_number] = {
 			tower = tower,
 			mirrors = { [mirror.unit_number] = mirror },
 		}
 	else
-		if not global.towers[tower.unit_number].mirrors then
+		if not storage.towers[tower.unit_number].mirrors then
 			-- This shouldn't be possible, but happened so I had to add it
-			global.towers[tower.unit_number].mirrors = { [mirror.unit_number] = mirror }
+			storage.towers[tower.unit_number].mirrors = { [mirror.unit_number] = mirror }
 		else
-			global.towers[tower.unit_number].mirrors[mirror.unit_number] = mirror
+			storage.towers[tower.unit_number].mirrors[mirror.unit_number] = mirror
 		end
 	end
 
@@ -179,14 +179,14 @@ function db.notify_tower_invalid(tid)
 
 	-- Remove every mirror -> tower relation
 
-	for mid, mirror in pairs(global.towers[tid].mirrors) do
+	for mid, mirror in pairs(storage.towers[tid].mirrors) do
 		db.removeMirrorFromTower { mid = mid }
 
 		-- Find new targets for orphaned mirrors, if it still exists
 
-		if db.valid_mid(mid) and global.mirrors[mid].in_range then
+		if db.valid_mid(mid) and storage.mirrors[mid].in_range then
 			local tower = db.closestTower {
-				towers = global.mirrors[mid].in_range,
+				towers = storage.mirrors[mid].in_range,
 				position = mirror.position,
 				ignore = tid,
 			}
@@ -202,35 +202,35 @@ function db.notify_tower_invalid(tid)
 	--end
 	-- remove this tower from record
 	-- Remove every tower -> mirror relation, return to consistency
-	global.towers[tid] = nil
+	storage.towers[tid] = nil
 
 
 	-- Fixes issue when last updated tower has just been destroyed
 	-- "invalid key to next"
 
-	if global.last_updated_tower == tid then
-		global.last_updated_tower = nil
+	if storage.last_updated_tower == tid then
+		storage.last_updated_tower = nil
 	end
-	if global.last_updated_tower_beam == tid then
-		global.last_updated_tower_beam = nil
+	if storage.last_updated_tower_beam == tid then
+		storage.last_updated_tower_beam = nil
 	end
 
 	db.on_tower_count_changed()
 end
 
 function db.on_tower_count_changed()
-	global.tower_update_count = math.ceil(table_size(global.towers) * control_util.tower_update_fraction)
-	global.tower_beam_update_count = math.ceil(table_size(global.towers) * control_util.beam_update_fraction)
+	storage.tower_update_count = math.ceil(table_size(storage.towers) * control_util.tower_update_fraction)
+	storage.tower_beam_update_count = math.ceil(table_size(storage.towers) * control_util.beam_update_fraction)
 
-	print(table_size(global.towers) .. " " .. global.tower_update_count)
+	print(table_size(storage.towers) .. " " .. storage.tower_update_count)
 end
 
 ---@param mirror LuaEntity
 ---@return LuaEntity?
 ---@nodiscard
 function db.getTowerForMirror(mirror)
-	if global.mirrors[mirror.unit_number] then
-		local tower = global.mirrors[mirror.unit_number].tower
+	if storage.mirrors[mirror.unit_number] then
+		local tower = storage.mirrors[mirror.unit_number].tower
 
 		if tower and tower.valid then
 			return tower
@@ -255,16 +255,16 @@ function db.distance_to_tower(mirror)
 end
 
 function db.mark_in_range(mid, tower)
-	if global.mirrors[mid].in_range then
-		global.mirrors[mid].in_range[tower.unit_number] = tower
+	if storage.mirrors[mid].in_range then
+		storage.mirrors[mid].in_range[tower.unit_number] = tower
 	else
-		global.mirrors[mid].in_range = { [tower.unit_number] = tower }
+		storage.mirrors[mid].in_range = { [tower.unit_number] = tower }
 	end
 end
 
 function db.mark_out_range(mid, tower)
-	if global.mirrors[mid] and global.mirrors[mid].in_range then
-		global.mirrors[mid].in_range[tower.unit_number] = nil
+	if storage.mirrors[mid] and storage.mirrors[mid].in_range then
+		storage.mirrors[mid].in_range[tower.unit_number] = nil
 	end
 end
 
@@ -300,23 +300,23 @@ function db.removeMirrorFromTower(args)
 
 	local mid = args.mid
 
-	--assert(global.mirrors[mid].tower.unit_number == tid,
+	--assert(storage.mirrors[mid].tower.unit_number == tid,
 
 	--"Mirror not connected to tower in mirrors->tower")
 
 	-- Destroy beams if we have them
-	if global.mirrors[mid].beam then
-		global.mirrors[mid].beam.destroy()
+	if storage.mirrors[mid].beam then
+		storage.mirrors[mid].beam.destroy()
 	end
 
 	-- Remove mirror -> tower relation
-	global.mirrors[mid].tower = nil
+	storage.mirrors[mid].tower = nil
 
 
 	if args.tid then
 		-- Remove tower -> mirrors relation
 		-- Skip this step for deleting a tower, when entire relation can be removed at once later
-		global.towers[args.tid].mirrors[mid] = nil
+		storage.towers[args.tid].mirrors[mid] = nil
 
 
 		--control_util.consistencyCheck()
@@ -326,31 +326,31 @@ function db.removeMirrorFromTower(args)
 end
 
 function db.consistencyCheck()
-	for tid, mirrors in pairs(global.towers) do
+	for tid, mirrors in pairs(storage.towers) do
 		if not db.valid_tid(tid) then
 			db.notify_tower_invalid(tid)
 
 			log("NOT CONSISTENT: tower " .. tid .. " ref to invalid tower")
 		else
 			for _, mirror in pairs(mirrors) do
-				assert(global.mirrors[mirror.unit_number],
+				assert(storage.mirrors[mirror.unit_number],
 					"NOT CONSISTENT: tower->mirror->tower relation does not exist")
 
-				assert(global.mirrors[mirror.unit_number].tower.unit_number == tid,
+				assert(storage.mirrors[mirror.unit_number].tower.unit_number == tid,
 					"NOT CONSISTENT: mirror points to multiple towers")
 
 				assert(mirror.valid, "NOT CONSISTENT: tower->mirrors ref to invalid mirror")
 
 
-				assert(global.towers[tid].tower.unit_number == tid, "NOT CONSISTENT: tower does not point to self")
+				assert(storage.towers[tid].tower.unit_number == tid, "NOT CONSISTENT: tower does not point to self")
 			end
 		end
 	end
 
 
-	for mid, mirror in pairs(global.mirrors) do
-		assert(global.mirrors[mid].mirror.unit_number == mid, "NOT CONSISTENT: mirror does not point to self")
-		assert(global.mirrors[mid].mirror.valid, "NOT CONSISTENT: mirror ref to invalid mirror")
+	for mid, mirror in pairs(storage.mirrors) do
+		assert(storage.mirrors[mid].mirror.unit_number == mid, "NOT CONSISTENT: mirror does not point to self")
+		assert(storage.mirrors[mid].mirror.valid, "NOT CONSISTENT: mirror ref to invalid mirror")
 	end
 end
 
@@ -362,12 +362,12 @@ function db.on_built_entity_callback(entity, tick)
 
 	-- game.print("Somthing was built")
 
-	if global.mirrors == nil then
+	if storage.mirrors == nil then
 		db.buildTrees()
 	else
 		if entity.name == control_util.heliostat_mirror then
 			-- Register this mirror
-			global.mirrors[entity.unit_number] = { mirror = entity }
+			storage.mirrors[entity.unit_number] = { mirror = entity }
 
 			-- Find a tower for this mirror
 			local towers = control_util.find_towers_around_entity { entity = entity }
@@ -396,7 +396,7 @@ function db.on_built_entity_callback(entity, tick)
 			local mirrors = control_util.find_mirrors_around_entity { entity = entity }
 
 			--added_mirrors = {}
-			global.towers[entity.unit_number] = { tower = entity, mirrors = {} }
+			storage.towers[entity.unit_number] = { tower = entity, mirrors = {} }
 
 			-- if any are closer to this tower then their current, switch their target
 

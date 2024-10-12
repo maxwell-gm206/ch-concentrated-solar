@@ -14,10 +14,11 @@ data:extend {
 		is_military_target   = false,
 		call_for_help_radius = 0,
 		attack_parameters    = {
-			type      = "beam",
-			ammo_type = { category = "beam" },
-			range     = 0,
-			cooldown  = 1000000,
+			type          = "beam",
+			ammo_type     = { category = "beam" },
+			ammo_category = "beam",
+			range         = 0,
+			cooldown      = 1000000,
 		},
 		minable              = {
 			mining_time = 0.5,
@@ -34,26 +35,31 @@ data:extend {
 		selection_box        = { { -1.5, -1.5 }, { 1.5, 1.5 } },
 		drawing_box          = { { -1.5, -2 }, { 1.5, 1.5 } },
 
-		base_picture         = {
-			layers = {
-				data_util.auto_hr {
-					filename = "heliostat-mirror-turret-base",
-					size = 32 * 3,
-					direction_count = 1,
-					scale = 1,
-					shift = { 0, 0 },
-					frame_count = 1,
-				},
-				{
+		graphics_set         = {
+			base_visualisation = {
+				animation = {
+					north = {
+						layers = {
+							data_util.auto_hr {
+								filename = "heliostat-mirror-turret-base",
+								size = 64 * 3,
+								direction_count = 1,
+								scale = 1,
+								shift = { 0, 0 },
+								frame_count = 1,
+							},
+							{
+								filename = data_util.sprite("heliostat-mirror-turret-base-shadow.png"),
+								line_length = 1,
+								size = 32 * 3,
+								draw_as_shadow = true,
+								direction_count = 1,
+								frame_count = 1,
+								shift = util.by_pixel(0, 6),
 
-					filename = data_util.sprite("heliostat-mirror-turret-base-shadow.png"),
-					line_length = 1,
-					size = 32 * 3,
-					draw_as_shadow = true,
-					direction_count = 1,
-					frame_count = 1,
-					shift = util.by_pixel(0, 6),
-
+							}
+						}
+					}
 				}
 			}
 		},
@@ -63,7 +69,7 @@ data:extend {
 				data_util.auto_hr {
 					direction_count = 32,
 					filename = "heliostat-mirror-turret",
-					size = 32 * 4,
+					size = 64 * 4,
 					frame_count = 1,
 					shift = { 0, -0.6 },
 					line_length = 8,

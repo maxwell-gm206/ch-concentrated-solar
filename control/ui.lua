@@ -42,9 +42,7 @@ ui.on_gui_opened = function(event)
 			type = "sprite-button",
 			name = "chcs-solar-tower-x-button",
 			style = "frame_action_button",
-			sprite = "utility/close_white",
-			hovered_sprite = "utility/close_black",
-			clicked_sprite = "utility/close_black",
+			sprite = "utility/close",
 			tooltip = { "gui.close-instruction" },
 		}
 
@@ -109,14 +107,14 @@ end
 
 
 ui.update_gui = function(gui)
-	if not global.towers[gui.tags.tid] then
+	if not storage.towers[gui.tags.tid] then
 		gui.destroy()
 		return
 	end
 
 
-	local mirrors = global.towers[gui.tags.tid].mirrors
-	local tower = global.towers[gui.tags.tid].tower
+	local mirrors = storage.towers[gui.tags.tid].mirrors
+	local tower = storage.towers[gui.tags.tid].tower
 	if not tower then
 		gui.destroy();
 		return
@@ -138,9 +136,9 @@ ui.update_gui = function(gui)
 
 
 	local mirror_count = table_size(mirrors)
-	local current_production = fluid.temperature * game.fluid_prototypes[fluid.name].heat_capacity * 0.000001
+	local current_production = fluid.temperature * prototypes.fluid[fluid.name].heat_capacity * 0.000001
 	local max_production = mirror_count * tower.surface.solar_power_multiplier * control_util.fluidTempPerMirror *
-		game.fluid_prototypes[fluid.name].heat_capacity * 0.000001
+		prototypes.fluid[fluid.name].heat_capacity * 0.000001
 
 
 	content_flow.sun_progressbar.value = daylight

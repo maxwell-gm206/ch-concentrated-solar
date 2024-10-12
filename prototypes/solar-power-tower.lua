@@ -27,7 +27,7 @@ data:extend {
 			sprite = { filename = data_util.sprite "solar-power-tower-radius-visualisation.png", size = 12 },
 			distance = data_util.tower_capture_radius
 		},
-
+		drawing_box_vertical_extension = 10.0,
 		-- SE Compat
 		se_allow_in_space = true,
 
@@ -41,11 +41,10 @@ data:extend {
 		{
 			type = "fluid",
 			fluid_box = {
-				base_area           = data_util.solar_max_temp,
-				height              = 0.01,
+				volume              = data_util.solar_max_temp,
 				pipe_connections    = {},
 				production_type     = "input",
-				minimum_temperature = 100.0,
+				minimum_temperature = 10.0,
 				maximum_temperature = data_util.solar_max_temp,
 				filter              = data_util.mod_prefix .. "solar-fluid"
 			},
@@ -80,8 +79,8 @@ data:extend {
 			{
 				data_util.auto_hr {
 					filename = "solar-power-tower",
-					width = 32 * tower_size.x,
-					height = 32 * tower_size.y,
+					width = 64 * tower_size.x,
+					height = 64 * tower_size.y,
 					shift = tower_shift,
 				},
 				{
@@ -106,8 +105,8 @@ data:extend {
 			filename = "solar-power-tower-working",
 			blend_mode = "additive",
 			draw_as_glow = true,
-			width = 32 * 4,
-			height = 32 * 4,
+			width = 64 * 4,
+			height = 64 * 4,
 			shift = { 0, -12.35 },
 		},
 		-- add a light to smooth out the effects of all the incoming beams
@@ -118,7 +117,7 @@ data:extend {
 		heat_buffer                          =
 		{
 			max_temperature = data_util.solar_max_temp,
-			specific_heat = "500KJ",
+			specific_heat = "500kJ",
 			max_transfer = "10GW",
 			minimum_glow_temperature = 250,
 			-- Same as nuclear reactor
@@ -176,8 +175,8 @@ data:extend {
 			heat_picture = apply_heat_pipe_glow(data_util.auto_hr
 				{
 					filename = "solar-power-tower-heated",
-					width = 32 * tower_size.x,
-					height = 32 * tower_size.y,
+					width = 64 * tower_size.x,
+					height = 64 * tower_size.y,
 					shift = tower_shift,
 				}),
 		},
@@ -185,107 +184,67 @@ data:extend {
 		lower_layer_picture                  =
 		{
 			filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes.png",
-			width = 156,
-			height = 156,
-			shift = util.by_pixel(-2, -4),
-			hr_version =
-			{
-				filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes.png",
-				width = 320,
-				height = 316,
-				scale = 0.5,
-				shift = util.by_pixel(-1, -5)
-			}
+			width = 320,
+			height = 316,
+			scale = 0.5,
+			shift = util.by_pixel(-1, -5)
 		},
 		heat_lower_layer_picture             = apply_heat_pipe_glow
 			{
 				filename = "__base__/graphics/entity/nuclear-reactor/reactor-pipes-heated.png",
-				width = 156,
-				height = 156,
-				shift = util.by_pixel(-3, -4),
-				hr_version =
-				{
-					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-pipes-heated.png",
-					width = 320,
-					height = 316,
-					scale = 0.5,
-					shift = util.by_pixel(-0.5, -4.5)
-				}
+				width = 320,
+				height = 316,
+				scale = 0.5,
+				shift = util.by_pixel(-0.5, -4.5)
 			},
+
 		connection_patches_connected         =
 		{
 			sheet =
 			{
 				filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches.png",
-				width = 32,
-				height = 32,
+				width = 64,
+				height = 64,
 				variation_count = 12,
-				hr_version =
-				{
-					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches.png",
-					width = 64,
-					height = 64,
-					variation_count = 12,
-					scale = 0.5
-				}
+				scale = 0.5
 			}
 		},
+
 		connection_patches_disconnected      =
 		{
 			sheet =
 			{
 				filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches.png",
-				width = 32,
-				height = 32,
+				width = 64,
+				height = 64,
 				variation_count = 12,
-				y = 32,
-				hr_version =
-				{
-					filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches.png",
-					width = 64,
-					height = 64,
-					variation_count = 12,
-					y = 64,
-					scale = 0.5
-				}
+				y = 64,
+				scale = 0.5
 			}
 		},
+
 		heat_connection_patches_connected    =
 		{
 			sheet = apply_heat_pipe_glow
 				{
 					filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches-heated.png",
-					width = 32,
-					height = 32,
+					width = 64,
+					height = 64,
 					variation_count = 12,
-					hr_version =
-					{
-						filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches-heated.png",
-						width = 64,
-						height = 64,
-						variation_count = 12,
-						scale = 0.5
-					}
+					scale = 0.5
 				}
 		},
+
 		heat_connection_patches_disconnected =
 		{
 			sheet = apply_heat_pipe_glow
 				{
 					filename = "__base__/graphics/entity/nuclear-reactor/reactor-connect-patches-heated.png",
-					width = 32,
-					height = 32,
+					width = 64,
+					height = 64,
 					variation_count = 12,
-					y = 32,
-					hr_version =
-					{
-						filename = "__base__/graphics/entity/nuclear-reactor/hr-reactor-connect-patches-heated.png",
-						width = 64,
-						height = 64,
-						variation_count = 12,
-						y = 64,
-						scale = 0.5
-					}
+					y = 64,
+					scale = 0.5
 				}
 		},
 		open_sound                           = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },

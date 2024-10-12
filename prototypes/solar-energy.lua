@@ -39,7 +39,8 @@ data:extend {
 		-- energy from x degrees of solar fluid becomes x * data_util.solar_heat_capacity_kj
 		default_temperature = 0,
 		max_temperature = data_util.solar_max_temp,
-		heat_capacity = data_util.solar_heat_capacity_kj .. "KJ"
+		heat_capacity = data_util.solar_heat_capacity_kj .. "kJ",
+		base_flow_rate = 6000,
 	},
 	{
 
@@ -50,12 +51,17 @@ data:extend {
 		damage_interval = 20,
 		random_target_offset = true,
 
-		head = mirrored_solar_beam,
-		tail = mirrored_solar_beam,
-		body =
-		{
-			mirrored_solar_beam
-		},
+		graphics_set = {
+			beam = {
+				head = mirrored_solar_beam,
+				tail = mirrored_solar_beam,
+				body =
+				{
+					mirrored_solar_beam
+				},
+			}
+		}
+
 	},
 	{
 
@@ -65,12 +71,16 @@ data:extend {
 		width = 1,
 		damage_interval = 20,
 		random_target_offset = true,
+		graphics_set = {
+			beam = {
+				head = solar_beam,
+				tail = solar_beam,
+				body =
+				{
+					solar_beam
+				},
+			}
+		}
 
-		head = solar_beam,
-		tail = solar_beam,
-		body =
-		{
-			solar_beam
-		},
 	}
 }
