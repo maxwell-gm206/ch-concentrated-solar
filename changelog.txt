@@ -8,6 +8,7 @@ Version: 0.4.0
 Date: 2024.10.10
   Features:
     - Support for Factorio 2.0
+    - Reworked damage and effects of laser tower.
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.4
 Date: 2024.09.22
