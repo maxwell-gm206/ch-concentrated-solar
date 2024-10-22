@@ -87,11 +87,13 @@ function nthtick.on_nth_tick_tower_update(event)
 					-- game.print("updating tower " .. tid .. "power" .. amount)
 
 					-- set to temprature and amount, as fluid turrets cannot display temperature
-					tower.insert_fluid {
-						name        = control_util.mod_prefix .. "solar-fluid",
-						amount      = amount,
-						temperature = amount
-					}
+					if amount > 0.01 then
+						tower.insert_fluid {
+							name        = control_util.mod_prefix .. "solar-fluid",
+							amount      = amount,
+							temperature = amount
+						}
+					end
 				end
 			else
 				--print("Deleting tower " .. tid)

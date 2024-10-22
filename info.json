@@ -1,6 +1,6 @@
 {
 	"name": "ch-concentrated-solar",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"title": "Cheese's Concentrated Solar",
 	"author": "StolenCheese",
 	"factorio_version": "2.0",
@@ -8,7 +8,7 @@
 		"base >= 2.0",
 		"? Krastorio2",
 		"? space-exploration >= 0.3.0",
-		"? AAI Industry",
+		"? aai-industry",
 		"(?) gvv"
 	],
 	"description": "Adds solar power towers heated by heliostat mirrors as a new form of heat generation."
