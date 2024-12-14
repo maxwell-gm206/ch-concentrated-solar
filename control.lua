@@ -5,14 +5,29 @@ local highlight    = require "control.highlight"
 local nthtick      = require "control.nthtick"
 local ui           = require "control.ui"
 local db           = require "control.database"
-local util         = require "util"
+
+require "control.interface"
 
 if script.active_mods["gvv"] then
 	require("__gvv__.gvv")()
 end
 
-script.on_init(db.on_init)
+--- Setup other mods
+function setup_other_mods()
+	-- Warp drive machine compat - heliostat mirrors are a weird entity
+	if remote.interfaces["WDM"] and remote.interfaces["WDM"].add_building_to_tile_color then
+		-- Add to solar tiles
+		remote.call("WDM", "add_building_to_tile_color", "blue", control_util.heliostat_mirror)
+	end
+end
 
+script.on_init(function()
+	db.on_init()
+
+	setup_other_mods()
+end)
+
+script.on_configuration_changed(setup_other_mods)
 
 script.on_nth_tick(control_util.tower_update_interval, nthtick.on_nth_tick_tower_update)
 
@@ -31,7 +46,7 @@ script.on_event(
 		defines.events.on_robot_built_entity,
 	},
 	function(event)
-		db.on_built_entity_callback(event.entity, event.tick)
+		db.on_built_entity_callback(event.entity)
 	end
 )
 
@@ -44,47 +59,17 @@ script.on_event(
 -- ON ENTITY REMOVED
 
 script.on_event(
-	{
-		defines.events.on_pre_player_mined_item,
-		defines.events.on_robot_mined_entity,
-		defines.events.on_entity_died,
-		defines.events.script_raised_destroy
-	},
+	{ defines.events.on_object_destroyed },
 	function(event)
-		-- game.print("Somthing was removed")
-		if storage.towers == nil then
-			db.buildTrees()
-		end
-
-		local eid = event.entity.unit_number
-
-		if eid == nil then
-			return
-		end
-
-		if db.valid_mid(eid) then
-			-- if this mirror is connected to a tower
-			if storage.mirrors[eid].tower then
-				-- remove this mirror from our tower's list
-				-- and remove the reference from this mirror to the tower
-				db.removeMirrorFromTower {
-					tid = storage.mirrors[eid].tower.unit_number,
-					mid = eid }
+		if event.type == defines.target_type.entity then
+			if storage.towers == nil then
+				db.build_trees()
 			end
 
-			--Lone mirrors have no data that needs to be cleaned up
-			storage.mirrors[eid] = nil
-
-			ui.update_guis()
-		elseif db.valid_tid(eid) then
-			db.notify_tower_invalid(eid)
-
-			ui.update_guis()
+			if db.on_destroyed_entity_callback(event.useful_id) then
+				ui.update_guis()
+			end
 		end
-
-		--game.print("entity " .. entity.unit_number .. " destroyed")
-
-		--control_util.consistencyCheck()
 	end
 )
 
@@ -134,8 +119,6 @@ do
 	script.set_event_filter(defines.events.on_robot_mined_entity, filters)
 	script.set_event_filter(defines.events.on_pre_player_mined_item, filters)
 end
-
-
 
 
 rendering.clear("ch-concentrated-solar")

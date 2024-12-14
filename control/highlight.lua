@@ -10,7 +10,7 @@ function highlight.cursor_stack_changed(event)
 	local stack = game.get_player(event.player_index).cursor_stack
 
 	if stack and stack.valid_for_read and
-		(control_util.isTower(stack.name) or stack.name == control_util.heliostat_mirror) then
+		(control_util.is_tower(stack.name) or stack.name == control_util.heliostat_mirror) then
 		-- Ensure table exists, but do not overwrite - possible for this to be called multiple times in a row
 		storage.player_tower_rect[event.player_index] = storage.player_tower_rect[event.player_index] or {}
 

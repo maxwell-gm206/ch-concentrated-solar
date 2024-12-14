@@ -18,20 +18,6 @@ local function solar_laser_turret_extension(inputs)
 		direction_count = 4,
 		scale = 1.5,
 		shift = { 0, lens_height },
-		--hr_version =
-		--{
-		--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-raising.png",
-		--	priority = "medium",
-		--	width = 130,
-		--	height = 126,
-		--	frame_count = inputs.frame_count or 15,
-		--	line_length = inputs.line_length or 0,
-		--	run_mode = inputs.run_mode or "forward",
-		--	axially_symmetrical = false,
-		--	direction_count = 4,
-		--	shift = util.by_pixel(0, -32.5),
-		--	scale = 0.5
-		--}
 	}
 end
 
@@ -216,18 +202,6 @@ data:extend {
 								priority = "high",
 								direction_count = 1,
 								frame_count = 1,
-								--hr_version =
-								--{
-								--	filename = "__base__/graphics/entity/laser-turret/hr-laser-turret-base-shadow.png",
-								--	line_length = 1,
-								--	width = 132,
-								--	height = 82,
-								--	draw_as_shadow = true,
-								--	direction_count = 1,
-								--	frame_count = 1,
-								--	shift = util.by_pixel(6, 3),
-								--	scale = 0.5
-								--}
 							},
 							data_util.auto_hr {
 								filename = "solar-laser-tower-mask",

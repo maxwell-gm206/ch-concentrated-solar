@@ -16,7 +16,7 @@ function nthtick.on_nth_tick_beam_update(event)
 	for i = 1, storage.tower_beam_update_count or 1, 1 do
 		storage.last_updated_tower_beam = next(storage.towers, storage.last_updated_tower_beam)
 
-		if storage.last_updated_tower_beam then
+		if storage.last_updated_tower_beam and db.valid_tid(storage.last_updated_tower_beam) then
 			local tower = storage.towers[storage.last_updated_tower_beam].tower
 			local sid = tower.surface.index
 
@@ -33,21 +33,22 @@ function nthtick.on_nth_tick_beam_update(event)
 			--game.print("New sun stage " .. stage .. " with life of " .. ttl)
 			for mid, mirror in pairs(storage.towers[storage.last_updated_tower_beam].mirrors) do
 				-- Can only spawn sun rays on mirrors with towers
+				if db.valid_mid(mid) then
+					local group = (mid * 29) % control_util.mirror_groups
 
-				local group = (mid * 29) % control_util.mirror_groups
-
-				if group <= stage and storage.mirrors[mid].beam == nil then
-					-- at this point, we dont need to worry about the old beams,
-					-- as they have been destroyed
-					storage.mirrors[mid].beam = beams.generateBeam
-						{
-							mirror = mirror,
-							tower = tower,
-							ttl = ttl
-						}
-				elseif group > stage and storage.mirrors[mid].beam then
-					storage.mirrors[mid].beam.destroy()
-					storage.mirrors[mid].beam = nil
+					if group <= stage and storage.mirrors[mid].beam == nil then
+						-- at this point, we dont need to worry about the old beams,
+						-- as they have been destroyed
+						storage.mirrors[mid].beam = beams.generateBeam
+							{
+								mirror = mirror,
+								tower = tower,
+								ttl = ttl
+							}
+					elseif group > stage and storage.mirrors[mid].beam then
+						storage.mirrors[mid].beam.destroy()
+						storage.mirrors[mid].beam = nil
+					end
 				end
 			end
 		end

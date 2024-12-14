@@ -16,12 +16,12 @@ local control_util = require "shared-util"
 tower_names = {}
 is_tower = {}
 
-function control_util.registerTowerName(name)
+function control_util.register_tower_name(name)
 	is_tower[name] = true
 	table.insert(tower_names, name)
 end
 
-function control_util.isTower(name)
+function control_util.is_tower(name)
 	return is_tower[name] ~= nil
 end
 
@@ -124,7 +124,7 @@ control_util.beam_update_fraction = control_util.beam_update_interval / control_
 
 
 
-control_util.registerTowerName(control_util.mod_prefix .. "solar-power-tower")
-control_util.registerTowerName(control_util.mod_prefix .. "solar-laser-tower")
+control_util.register_tower_name(control_util.solar_power_tower)
+control_util.register_tower_name(control_util.solar_laser_tower)
 
 return control_util

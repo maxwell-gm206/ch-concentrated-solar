@@ -1,18 +1,5 @@
 local db = {}
-
 local control_util = require "control-util"
-
-remote.add_interface("ch-concentrated-solar", {
-	towers = function()
-		local towers = {}
-		for number, tower in pairs(storage.towers) do
-			towers[number] = { entity = tower.tower, mirror_count = table_size(tower.mirrors) }
-		end
-		return towers
-	end,
-
-	max_mirrors = control_util.surface_max_mirrors,
-})
 
 function db.on_init()
 	-- Ensure every storage table used exists
@@ -29,31 +16,42 @@ function db.on_init()
 	---@type {[uint] : LuaEntity}
 	storage.player_tower_rect = storage.player_tower_rect or {}
 
-
 	--control_util.buildTrees()
 
-	db.consistencyCheck()
+	db.consistency_check()
 
 	game.print(control_util.mod_prefix .. "welcome")
+end
+
+---@param tid uint?
+---@nodiscard
+function db.tid_registered(tid)
+	return tid and storage.towers[tid]
 end
 
 -- catch all functions for if a tid or mid is safe to use
 ---@param tid uint?
 ---@nodiscard
 function db.valid_tid(tid)
-	return tid and storage.towers[tid] and storage.towers[tid].tower and storage.towers[tid].tower.valid
+	return db.tid_registered(tid) and storage.towers[tid].tower and storage.towers[tid].tower.valid
+end
+
+---@param mid uint?
+---@nodiscard
+function db.mid_registered(tid)
+	return tid and storage.mirrors[tid]
 end
 
 ---@param mid uint?
 ---@nodiscard
 function db.valid_mid(mid)
-	return mid and storage.mirrors[mid] and storage.mirrors[mid].mirror and storage.mirrors[mid].mirror.valid
+	return db.mid_registered(mid) and storage.mirrors[mid].mirror and storage.mirrors[mid].mirror.valid
 end
 
 ---@param inputs {towers:LuaEntity[], position:Vector, ignore_id : number?}
 ---@return LuaEntity?
 ---@nodiscard
-function db.closestTower(inputs)
+function db.closest_tower(inputs)
 	local bestTower = nil
 	local bestDistance = nil
 	for _, tower in pairs(inputs.towers) do
@@ -74,7 +72,7 @@ end
 ---@param args {mirror:LuaEntity, tower:LuaEntity, all_in_range : LuaEntity[]? }
 --- Link a mirror and a tower, rotating the mirror to point in the correct direction
 --- `all_in_range` - all towers in range of the mirror, assigned to `[mid]=in_range` if mirror is new
-function db.linkMirrorToTower(args)
+function db.link_mirror_to_tower(args)
 	local tower = args.tower
 	local mirror = args.mirror
 
@@ -98,7 +96,7 @@ function db.linkMirrorToTower(args)
 				--add the previous link to in_range
 				db.mark_in_range(mid, storage.mirrors[mid].tower)
 				-- Clean up previous link
-				db.removeMirrorFromTower { mid = mid, tid = storage.mirrors[mid].tower.unit_number }
+				db.remove_mirror_from_tower { mid = mid, tid = storage.mirrors[mid].tower.unit_number }
 			end
 		end
 		-- If this tower was marked in range before, remove it
@@ -143,14 +141,14 @@ end
 ---@param inputs MirrorTower
 --- run `linkMirrorToTower` if the new tower has a distance lower than the original
 --- and store the tower as in range is it is
-function db.linkMirrorToTowerIfCloser(inputs)
+function db.link_mirror_to_tower_if_closer(inputs)
 	-- Only link towers and mirrors if they have the same force
 	if inputs.mirror.force.name ~= inputs.tower.force.name then
 		return
 	end
 
 	-- tower is valid if not nil
-	local tower = db.getTowerForMirror(inputs.mirror)
+	local tower = db.get_tower_for_mirror(inputs.mirror)
 
 	if tower then
 		local curDist = control_util.dist_sqr(inputs.mirror.position, tower.position)
@@ -158,7 +156,7 @@ function db.linkMirrorToTowerIfCloser(inputs)
 		local newDist = control_util.dist_sqr(inputs.mirror.position, inputs.tower.position)
 
 		if newDist < curDist and newDist < control_util.tower_capture_radius_sqr then
-			db.linkMirrorToTower(inputs)
+			db.link_mirror_to_tower(inputs)
 		elseif newDist < control_util.tower_capture_radius_sqr then
 			-- Tower not closer, but still in range, could be used later,
 			-- add it to the mirror's list of other towers in range
@@ -168,7 +166,7 @@ function db.linkMirrorToTowerIfCloser(inputs)
 			db.mark_in_range(inputs.mirror.unit_number, inputs.tower)
 		end
 	else
-		db.linkMirrorToTower(inputs)
+		db.link_mirror_to_tower(inputs)
 	end
 end
 
@@ -180,19 +178,19 @@ function db.notify_tower_invalid(tid)
 	-- Remove every mirror -> tower relation
 
 	for mid, mirror in pairs(storage.towers[tid].mirrors) do
-		db.removeMirrorFromTower { mid = mid }
+		db.remove_mirror_from_tower { mid = mid }
 
 		-- Find new targets for orphaned mirrors, if it still exists
 
 		if db.valid_mid(mid) and storage.mirrors[mid].in_range then
-			local tower = db.closestTower {
+			local tower = db.closest_tower {
 				towers = storage.mirrors[mid].in_range,
 				position = mirror.position,
 				ignore = tid,
 			}
 
 			if tower then
-				db.linkMirrorToTower {
+				db.link_mirror_to_tower {
 					mirror = mirror,
 					tower = tower
 				}
@@ -228,7 +226,7 @@ end
 ---@param mirror LuaEntity
 ---@return LuaEntity?
 ---@nodiscard
-function db.getTowerForMirror(mirror)
+function db.get_tower_for_mirror(mirror)
 	if storage.mirrors[mirror.unit_number] then
 		local tower = storage.mirrors[mirror.unit_number].tower
 
@@ -245,7 +243,7 @@ end
 ---@nodiscard
 --- Distance from `mirror` to it's tower
 function db.distance_to_tower(mirror)
-	local tower = db.getTowerForMirror(mirror)
+	local tower = db.get_tower_for_mirror(mirror)
 
 	if tower then
 		return control_util.dist_sqr(mirror.position, tower.position)
@@ -268,7 +266,7 @@ function db.mark_out_range(mid, tower)
 	end
 end
 
-function db.buildTrees()
+function db.build_trees()
 	print("Generating tower relations")
 
 	--beams.delete_all_beams()
@@ -281,22 +279,21 @@ function db.buildTrees()
 		if towers then
 			for _, tower in pairs(towers) do
 				-- Mark each tower as new
-				db.on_built_entity_callback(tower, game.tick + 1)
+				db.on_built_entity_callback(tower)
 			end
 		end
 	end
 
-
-	db.consistencyCheck()
+	db.consistency_check()
 end
 
 -- If we don't want to remove the mirror from the tower's list of mirrors
 -- (tower destroyed), simply do not include the tid in calling
 ---@param args { tid : uint?  , mid:uint}
-function db.removeMirrorFromTower(args)
+function db.remove_mirror_from_tower(args)
 	-- unpack and verify arguments
 
-	if not db.valid_mid(args.mid) then return end
+	if not db.mid_registered(args.mid) then return end
 
 	local mid = args.mid
 
@@ -325,7 +322,7 @@ function db.removeMirrorFromTower(args)
 	--control_util.consistencyCheck()
 end
 
-function db.consistencyCheck()
+function db.consistency_check()
 	for tid, mirrors in pairs(storage.towers) do
 		if not db.valid_tid(tid) then
 			db.notify_tower_invalid(tid)
@@ -355,16 +352,16 @@ function db.consistencyCheck()
 end
 
 ---@param entity LuaEntity
----@param tick uint
-function db.on_built_entity_callback(entity, tick)
+function db.on_built_entity_callback(entity)
 	assert(entity, "Called back with nil entity")
-	assert(tick, "Called back with nil tick")
 
-	-- game.print("Somthing was built")
+	-- game.print("Something was built")
 
 	if storage.mirrors == nil then
-		db.buildTrees()
+		db.build_trees()
 	else
+		local relevant = false
+
 		if entity.name == control_util.heliostat_mirror then
 			-- Register this mirror
 			storage.mirrors[entity.unit_number] = { mirror = entity }
@@ -372,11 +369,11 @@ function db.on_built_entity_callback(entity, tick)
 			-- Find a tower for this mirror
 			local towers = control_util.find_towers_around_entity { entity = entity }
 
-			local tower = db.closestTower { towers = towers, position = entity.position }
+			local tower = db.closest_tower { towers = towers, position = entity.position }
 
 			if tower then
 				-- Pick the closest tower out of the avaliable
-				db.linkMirrorToTower {
+				db.link_mirror_to_tower {
 					mirror = entity,
 					tower = tower,
 					all_in_range = control_util.convert_to_indexed_table(towers)
@@ -391,26 +388,70 @@ function db.on_built_entity_callback(entity, tick)
 					speed = 1.0,
 				}
 			end
-		elseif control_util.isTower(entity.name) then
+
+			relevant = true
+		elseif control_util.is_tower(entity.name) then
+			-- Register this tower
+			storage.towers[entity.unit_number] = { tower = entity, mirrors = {} }
+
 			--get mirrors in radius around us
 			local mirrors = control_util.find_mirrors_around_entity { entity = entity }
 
-			--added_mirrors = {}
-			storage.towers[entity.unit_number] = { tower = entity, mirrors = {} }
-
 			-- if any are closer to this tower then their current, switch their target
-
 			for _, mirror in pairs(mirrors) do
 				-- will always succed if this mirror has no tower
-				db.linkMirrorToTowerIfCloser { mirror = mirror, tower = entity }
+				db.link_mirror_to_tower_if_closer { mirror = mirror, tower = entity }
 			end
 
-
 			db.on_tower_count_changed()
+
+			relevant = true
+		end
+
+		if relevant then
+			-- Register for deletion events. More reliable than on_entity_died, etc, as this is always called (eventually)
+			-- Downside is, it is not called immediately, so data structures may contain invalid data for short periods of time
+			local id, sec_id, type = script.register_on_object_destroyed(entity)
+			assert(sec_id == entity.unit_number,
+				"Register on object destroyed should return the entity ID of the object")
 		end
 	end
 
 	--control_util.consistencyCheck()
+end
+
+---@param eid integer?
+---@return boolean
+function db.on_destroyed_entity_callback(eid)
+	if eid == nil then
+		return false
+	end
+
+	if db.mid_registered(eid) then
+		-- if this miror is connected to a tower
+		if storage.mirrors[eid].tower then
+			-- remove this mirror from our tower's list
+			-- nd remove the reference from this mirror to the tower
+			db.remove_mirror_from_tower {
+				tid = storage.mirrors[eid].tower.unit_number,
+				mid = eid }
+		end
+
+		--Lone mirrors have no data that needs to be cleaned up
+		storage.mirrors[eid] = nil
+
+		return true
+	elseif db.tid_registered(eid) then
+		db.notify_tower_invalid(eid)
+
+		return true
+	end
+
+	--game.print("entity " .. entity.unit_number .. " destroyed")
+
+	--control_util.consistencyCheck()
+
+	return false
 end
 
 return db

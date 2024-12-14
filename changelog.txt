@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.2
+Date: 2024.10.22
+  Minor Features:
+    - Support for Warp Drive Machine (can place heliostat mirrors on blue tiles)
+  Bugfixes:
+    - Fixed class of bugs related to deleted entities not being removed in database - all entities should now be correctly removed on deletion, no matter the source.
+---------------------------------------------------------------------------------------------------
 Version: 0.4.1
 Date: 2024.10.22
   Bugfixes:
