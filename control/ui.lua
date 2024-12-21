@@ -137,8 +137,8 @@ ui.update_gui = function(gui)
 
 	local mirror_count = table_size(mirrors)
 	local current_production = fluid.temperature * prototypes.fluid[fluid.name].heat_capacity * 0.000001
-	local max_production = mirror_count * tower.surface.solar_power_multiplier * control_util.fluidTempPerMirror *
-		prototypes.fluid[fluid.name].heat_capacity * 0.000001
+	local max_production = mirror_count * tower.surface.solar_power_multiplier * control_util.fluid_temp_per_mirror *
+		prototypes.fluid[fluid.name].heat_capacity * 0.000001 * (1.0 + tower.quality.level * 0.3)
 
 
 	content_flow.sun_progressbar.value = daylight
@@ -149,7 +149,8 @@ ui.update_gui = function(gui)
 	}
 
 
-	content_flow.heat_progressbar.value = fluid.temperature / control_util.solar_max_temp
+	content_flow.heat_progressbar.value = fluid.temperature /
+	(control_util.solar_max_temp * (1.0 + tower.quality.level * 0.3))
 	content_flow.heat_progressbar.caption = { 'ch-gui.tower-heat', math.floor(fluid.temperature * 100) / 100 }
 
 	content_flow.mirrors.caption = {

@@ -14,7 +14,7 @@ shared_util.solar_max_temp = 600
 
 
 ---@type uint
-shared_util.fluidTempPerMirror = 1.1
+shared_util.fluid_temp_per_mirror = 1.1
 
 
 
@@ -24,7 +24,8 @@ shared_util.tower_capture_radius_sqr = shared_util.tower_capture_radius ^ 2
 
 shared_util.solar_laser_ticks_between_shots = 1
 
-
+-- 4 times radius squared is diameter squared, plus one for good luck, divided by 9 for area of mirror
+shared_util.max_mirrors_within_capture_radius = shared_util.tower_capture_radius_sqr * 5 / 9
 
 
 -- Number of groups of mirrors that will have sun rays spawned on them
@@ -35,7 +36,7 @@ shared_util.mirror_groups = 100
 
 -- Number of mirrors required to saturate a tower on a solar intensity 1 world.
 ---@type uint
-local max_mirrors_per_tower = math.ceil(shared_util.solar_max_temp / shared_util.fluidTempPerMirror)
+local max_mirrors_per_tower = math.ceil(shared_util.solar_max_temp / shared_util.fluid_temp_per_mirror)
 
 -- Maximum mirrors to fully saturate a tower, based on the solar power multiplier of its surface.
 -- Tower can be any reference entity, as long as it is on the current surface

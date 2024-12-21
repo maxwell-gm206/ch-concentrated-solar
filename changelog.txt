@@ -1,10 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.3
+Date: 2024.12.21
+  Changes:
+    - [Credit: ZarSasha] Heliostat Mirror: Added a custom explosion effect, along with standard 
+      impact visuals and sound effects. Also increased space above tooltip image (won't work for ghosts).
+    - Quality support for towers only - power generated scales the same with mirrors, but reflects quality-ified increased amount.
+  Bugfixes:
+    - Fixed divide by zero causing crash on zero sunlight surfaces.
+---------------------------------------------------------------------------------------------------
 Version: 0.4.2
-Date: 2024.10.22
+Date: 2024.12.14
   Minor Features:
     - Support for Warp Drive Machine (can place heliostat mirrors on blue tiles)
   Bugfixes:
-    - Fixed class of bugs related to deleted entities not being removed in database - all entities should now be correctly removed on deletion, no matter the source.
+    - Fixed class of bugs related to deleted entities not being removed in database - all entities 
+      should now be correctly removed on deletion, no matter the source.
 ---------------------------------------------------------------------------------------------------
 Version: 0.4.1
 Date: 2024.10.22
@@ -21,14 +31,15 @@ Version: 0.3.4
 Date: 2024.09.22
   Changes:
     - Fix bots rotating the tower crashing mod
-    - Introduce remote interface for towers and max_mirrors per surface (thanks TheKingJo)
+    - [Credit: TheKingJo] Introduced remote interface for towers and max_mirrors per surface
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.3
 Date: 2023.11.28
   Changes:
     - Major boost to laser tower range.
-    - Removed dependancy on nuclear power - research now also contains all required heat related equipment.
-    - Respect surface.solar_power_multiplier, both when calculating mirror contribution to a tower, and in the maximum mirrors readout in GUI (and when placing a new tower).
+    - Removed dependency on nuclear power - research now also contains all required heat related equipment.
+    - Respect surface.solar_power_multiplier, both when calculating mirror contribution to a tower, and in 
+      the maximum mirrors readout in GUI (and when placing a new tower).
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.2
 Date: 2023.04.08
@@ -38,7 +49,7 @@ Date: 2023.04.08
 Version: 0.3.1
 Date: 2023.04.03
   Changes:
-    - More resilliant global tables, with migration.
+    - More resilient global tables, with migration.
     - Fixed crash a surface was deleted that contained towers and mirrors.
     - Updated GUI to clarify heat rather then electric power.
 ---------------------------------------------------------------------------------------------------
@@ -76,9 +87,9 @@ Date: 2023.01.16
     - Added bounds indicator for placing towers and mirrors.
   Minor Features:
     - Reworked how highlight boxes are managed.
-    - Increased tower range to 35 to accomodate for previous slightly incorrect calulcation.
+    - Increased tower range to 35 to accommodate for previous slightly incorrect calculation.
   Bugfixes:
-    - Fixed incosistencies in tower range.
+    - Fixed inconsistencies in tower range.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.5
 Date: 2023.01.14

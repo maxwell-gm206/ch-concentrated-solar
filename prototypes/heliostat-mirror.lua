@@ -1,7 +1,7 @@
 local data_util = require("data-util")
+local hit_effects = require("__base__.prototypes.entity.hit-effects")
 
 data:extend {
-
 	{
 		type = "turret",
 		name = data_util.mod_prefix .. "heliostat-mirror",
@@ -9,33 +9,37 @@ data:extend {
 
 		icon = data_util.sprite "heliostat-mirror-icon.png",
 		icon_size = 64, icon_mipmaps = 4,
+		drawing_box_vertical_extension = 0.5,
 
 		--show_recipe_icon = false,
-		is_military_target   = false,
-		call_for_help_radius = 0,
-		attack_parameters    = {
+		is_military_target             = false,
+		call_for_help_radius           = 0,
+		attack_parameters              = {
 			type          = "beam",
 			ammo_type     = { category = "beam" },
 			ammo_category = "beam",
 			range         = 0,
 			cooldown      = 1000000,
 		},
-		minable              = {
+		minable                        = {
 			mining_time = 0.5,
 			result      = data_util.mod_prefix .. 'heliostat-mirror'
 		},
-		friendly_map_color   = data.raw["utility-constants"]["default"].chart.default_friendly_color_by_type["solar-panel"],
-		max_health           = 150,
-		corpse               = 'medium-small-remnants',
+		friendly_map_color             = data.raw["utility-constants"]["default"].chart.default_friendly_color_by_type["solar-panel"],
+		max_health                     = 150,
+		corpse                         = 'medium-small-remnants',
+		dying_explosion                = "heliostat-mirror-explosion",
+		impact_category                = "glass",
+		damaged_trigger_effect         = hit_effects.entity(),
 
 		-- SE Compat
-		se_allow_in_space    = true,
+		se_allow_in_space              = true,
 
-		collision_box        = { { -1.1, -1.1 }, { 1.2, 1.2 } },
-		selection_box        = { { -1.5, -1.5 }, { 1.5, 1.5 } },
-		drawing_box          = { { -1.5, -2 }, { 1.5, 1.5 } },
+		collision_box                  = { { -1.1, -1.1 }, { 1.2, 1.2 } },
+		selection_box                  = { { -1.5, -1.5 }, { 1.5, 1.5 } },
+		drawing_box                    = { { -1.5, -2 }, { 1.5, 1.5 } },
 
-		graphics_set         = {
+		graphics_set                   = {
 			base_visualisation = {
 				animation = {
 					north = {
@@ -64,7 +68,7 @@ data:extend {
 			}
 		},
 
-		folded_animation     = {
+		folded_animation               = {
 			layers = {
 				data_util.auto_hr {
 					direction_count = 32,

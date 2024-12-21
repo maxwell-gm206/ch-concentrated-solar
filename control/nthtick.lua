@@ -82,17 +82,17 @@ function nthtick.on_nth_tick_tower_update(event)
 				tower.clear_fluid_inside()
 
 				if sun > 0 and table_size(mirrors) > 0 then
-					local amount = tower.surface.solar_power_multiplier * control_util.fluidTempPerMirror * sun *
+					local amount = tower.surface.solar_power_multiplier * control_util.fluid_temp_per_mirror * sun *
 						table_size(mirrors)
 
 					-- game.print("updating tower " .. tid .. "power" .. amount)
 
-					-- set to temprature and amount, as fluid turrets cannot display temperature
+					-- set to temperature and amount, as fluid turrets cannot display temperature
 					if amount > 0.01 then
 						tower.insert_fluid {
 							name        = control_util.mod_prefix .. "solar-fluid",
 							amount      = amount,
-							temperature = amount
+							temperature = amount * (1.0 + tower.quality.level * 0.3)
 						}
 					end
 				end

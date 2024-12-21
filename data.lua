@@ -8,7 +8,7 @@ require "prototypes.technology"
 require "prototypes.recipe"
 require "prototypes.item"
 require "prototypes.achievement"
-
+require "prototypes.explosion"
 
 -- Increase entity size globally, to account for increased size on solar towers and shadows
 

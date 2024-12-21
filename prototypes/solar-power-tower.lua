@@ -45,14 +45,14 @@ data:extend {
 				pipe_connections    = {},
 				production_type     = "input",
 				minimum_temperature = 10.0,
-				maximum_temperature = data_util.solar_max_temp,
+				-- maximum_temperature = data_util.solar_max_temp,
 				filter              = data_util.mod_prefix .. "solar-fluid"
 			},
 			--destroy_non_fuel_fluid = true,
 			burns_fluid = false,
 			scale_fluid_usage = true,
 			fluid_usage_per_tick = data_util.solar_max_consumption / 60,
-			maximum_temperature = data_util.solar_max_temp,
+			-- maximum_temperature = data_util.solar_max_temp * 2.5,
 			--fuel_category = control_util.mod_prefix .. "solar-energy",
 			--fuel_inventory_size = 1
 

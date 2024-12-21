@@ -38,9 +38,8 @@ data:extend {
 		-- default temprature 0 makes energy calculations very simple
 		-- energy from x degrees of solar fluid becomes x * data_util.solar_heat_capacity_kj
 		default_temperature = 0,
-		max_temperature = data_util.solar_max_temp,
+		max_temperature = data_util.solar_max_temp * 2.5,
 		heat_capacity = data_util.solar_heat_capacity_kj .. "kJ",
-		base_flow_rate = 6000,
 	},
 	{
 
