@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.4
+Date: 2024.12.26
+  Bugfixes:
+    - Attempt to fix yet more inconsistencies with entity deletion.
+    - Added radius visualisation to solar laser tower (oversight).
+---------------------------------------------------------------------------------------------------
 Version: 0.4.3
 Date: 2024.12.21
   Changes:

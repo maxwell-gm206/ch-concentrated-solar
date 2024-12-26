@@ -1,8 +1,6 @@
 local data_util           = require("data-util")
-
-local hit_effects         = require("__base__.prototypes.entity.hit-effects")
-
 local util                = require("util")
+local hit_effects         = require("__base__.prototypes.entity.hit-effects")
 
 local tower_shift         = { 0, -(17 / 2 - 2.5) }
 local tower_size          = { x = 5, y = 17 }

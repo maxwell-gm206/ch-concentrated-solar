@@ -59,6 +59,31 @@ script.on_event(
 -- ON ENTITY REMOVED
 
 script.on_event(
+	{
+		defines.events.on_pre_player_mined_item,
+		defines.events.on_robot_mined_entity,
+		defines.events.on_entity_died,
+		defines.events.script_raised_destroy
+	},
+	function(event)
+		-- game.print("Something was removed")
+		if storage.towers == nil then
+			db.buildTrees()
+		end
+
+		local eid = event.entity.unit_number
+
+		if eid == nil then
+			return
+		end
+
+		if db.on_destroyed_entity_callback(eid) then
+			ui.update_guis()
+		end
+	end
+)
+
+script.on_event(
 	{ defines.events.on_object_destroyed },
 	function(event)
 		if event.type == defines.target_type.entity then
@@ -115,9 +140,13 @@ do
 
 	script.set_event_filter(defines.events.on_built_entity, filters)
 	script.set_event_filter(defines.events.on_robot_built_entity, filters)
+	script.set_event_filter(defines.events.script_raised_revive, filters)
+	script.set_event_filter(defines.events.script_raised_built, filters)
 
 	script.set_event_filter(defines.events.on_robot_mined_entity, filters)
 	script.set_event_filter(defines.events.on_pre_player_mined_item, filters)
+	script.set_event_filter(defines.events.on_entity_died, filters)
+	script.set_event_filter(defines.events.script_raised_destroy, filters)
 end
 
 

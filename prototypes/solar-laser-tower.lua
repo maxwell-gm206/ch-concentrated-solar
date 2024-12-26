@@ -58,7 +58,10 @@ data:extend {
 		folding_sound = sounds.laser_turret_deactivate,
 		corpse = "medium-remnants",
 		dying_explosion = "laser-turret-explosion",
-
+		radius_visualisation_specification = {
+			sprite = { filename = data_util.sprite "solar-power-tower-radius-visualisation.png", size = 12 },
+			distance = data_util.tower_capture_radius
+		},
 		-- SE Compat
 		se_allow_in_space = true,
 
