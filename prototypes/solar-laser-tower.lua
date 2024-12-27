@@ -177,11 +177,12 @@ data:extend {
 				--solar_laser_turret_extension_mask { run_mode = "backward" }
 			}
 		},
-		base_picture_render_layer = "higher-object-under",
-		gun_animation_render_layer = "higher-object-above",
+		base_picture_render_layer = "elevated-object",
+		gun_animation_render_layer = "elevated-higher-object",
+		--integration_patch_render_layer = "elevated-higher-object",
 		graphics_set = {
 			base_visualisation = {
-
+				render_layer = "elevated-object",
 				animation =
 				{
 					north = {
