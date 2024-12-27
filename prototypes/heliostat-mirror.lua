@@ -59,7 +59,7 @@ data:extend {
 								draw_as_shadow = true,
 								direction_count = 1,
 								frame_count = 1,
-								shift = util.by_pixel(0, 6),
+								shift = util.by_pixel(-4, 6),
 
 							}
 						}
@@ -85,7 +85,7 @@ data:extend {
 					height = 112,
 					frame_count = 1,
 					draw_as_shadow = true,
-					shift = { 1.5, 0 },
+					shift = { 1.5, 0.7 },
 					line_length = 8
 				},
 			}
