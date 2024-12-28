@@ -7,8 +7,8 @@ data:extend {
 		name = data_util.mod_prefix .. "heliostat-mirror",
 		flags = { "placeable-neutral", "player-creation" },
 
-		icon = data_util.sprite "heliostat-mirror-icon.png",
-		icon_size = 64, icon_mipmaps = 4,
+		icon = data_util.sprite "icons/heliostat-mirror-icon.png",
+		icon_size = 64,
 		drawing_box_vertical_extension = 0.5,
 
 		--show_recipe_icon = false,
@@ -59,7 +59,7 @@ data:extend {
 								draw_as_shadow = true,
 								direction_count = 1,
 								frame_count = 1,
-								shift = util.by_pixel(0, 6),
+								shift = util.by_pixel(-4, 6),
 
 							}
 						}
@@ -85,7 +85,7 @@ data:extend {
 					height = 112,
 					frame_count = 1,
 					draw_as_shadow = true,
-					shift = { 1.5, 0 },
+					shift = { 1.5, 0.7 },
 					line_length = 8
 				},
 			}

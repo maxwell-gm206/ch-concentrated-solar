@@ -40,7 +40,7 @@ data:extend {
 	{
 		type = "technology",
 		icon = data_util.sprite "technology/concentrated-solar-energy.png",
-		icon_size = 256, icon_mipmaps = 4,
+		icon_size = 256,
 		name = data_util.mod_prefix .. "concentrated-solar-energy",
 		prerequisites = prerequisites,
 		effects = effects,
@@ -59,7 +59,7 @@ data:extend {
 	{
 		type = "technology",
 		icon = data_util.sprite "technology/weaponized-solar-energy.png",
-		icon_size = 256, icon_mipmaps = 4,
+		icon_size = 256,
 		name = data_util.mod_prefix .. "weaponized-solar-energy",
 		prerequisites = {
 			"laser-turret",

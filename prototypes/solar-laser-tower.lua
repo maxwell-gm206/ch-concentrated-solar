@@ -42,8 +42,8 @@ data:extend {
 		type = "fluid-turret",
 
 		name = data_util.mod_prefix .. "solar-laser-tower",
-		icon = data_util.sprite "solar-laser-tower-icon.png",
-		icon_size = 64, icon_mipmaps = 4,
+		icon = data_util.sprite "icons/solar-laser-tower-icon.png",
+		icon_size = 64,
 		flags = { "placeable-player", "placeable-enemy", "player-creation" },
 		minable = { mining_time = 1, result = data_util.mod_prefix .. "solar-laser-tower" },
 		max_health = 4000,
@@ -177,11 +177,12 @@ data:extend {
 				--solar_laser_turret_extension_mask { run_mode = "backward" }
 			}
 		},
-		base_picture_render_layer = "higher-object-under",
-		gun_animation_render_layer = "higher-object-above",
+		base_picture_render_layer = "elevated-object",
+		gun_animation_render_layer = "elevated-higher-object",
+		--integration_patch_render_layer = "elevated-higher-object",
 		graphics_set = {
 			base_visualisation = {
-
+				render_layer = "elevated-object",
 				animation =
 				{
 					north = {
