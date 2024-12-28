@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.5
+Date: 2024.12.28
+  Changes:
+    - [Credit: snouz] Redone icons / tech icons / achievement / thumbnail
+    - [Credit: snouz] Slightly edited some entities
+    - [Credit: snouz] Fixed turret tower displaying behind object on ground
+    - [Credit: snouz] Fixed some shadow positions
+---------------------------------------------------------------------------------------------------
 Version: 0.4.4
 Date: 2024.12.26
   Bugfixes:
