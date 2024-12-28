@@ -28,8 +28,8 @@ data:extend {
 	{ type = "fuel-category", name = data_util.mod_prefix .. "solar-energy" },
 	{
 		type = "fluid",
-		icon = "__base__/graphics/icons/tooltips/tooltip-category-chemical.png",
-		icon_size = 40, icon_mipmaps = 2,
+		icon = data_util.sprite "icons/sun-icon.png",
+		icon_size = 40,
 		name = data_util.mod_prefix .. "solar-fluid",
 		hidden = true,
 		auto_barrel = false,

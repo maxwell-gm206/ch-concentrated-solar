@@ -13,9 +13,8 @@ data:extend {
 	{
 		type = "reactor",
 		name = data_util.mod_prefix .. "solar-power-tower",
-		icon = data_util.sprite "solar-power-tower-icon.png",
+		icon = data_util.sprite "icons/solar-power-tower-icon.png",
 		icon_size = 64,
-		icon_mipmaps = 4,
 		flags = { "placeable-neutral", "player-creation" },
 		minable = { mining_time = 1, result = data_util.mod_prefix .. "solar-power-tower" },
 		max_health = 500,
