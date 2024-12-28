@@ -175,6 +175,7 @@ data:extend {
 					width = 64 * tower_size.x,
 					height = 64 * tower_size.y,
 					shift = tower_shift,
+					blend_mode = "additive",
 				}),
 		},
 		--- HEAT PIPE CONNECTION TEXTURES
