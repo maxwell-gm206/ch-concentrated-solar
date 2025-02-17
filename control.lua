@@ -44,6 +44,7 @@ script.on_event(
 		defines.events.script_raised_revive,
 		defines.events.on_built_entity,
 		defines.events.on_robot_built_entity,
+		defines.events.on_space_platform_built_entity,
 	},
 	function(event)
 		db.on_built_entity_callback(event.entity)
@@ -62,6 +63,7 @@ script.on_event(
 	{
 		defines.events.on_pre_player_mined_item,
 		defines.events.on_robot_mined_entity,
+		defines.events.on_space_platform_mined_entity,
 		defines.events.on_entity_died,
 		defines.events.script_raised_destroy
 	},
@@ -140,11 +142,13 @@ do
 
 	script.set_event_filter(defines.events.on_built_entity, filters)
 	script.set_event_filter(defines.events.on_robot_built_entity, filters)
+	script.set_event_filter(defines.events.on_space_platform_built_entity, filters)
 	script.set_event_filter(defines.events.script_raised_revive, filters)
 	script.set_event_filter(defines.events.script_raised_built, filters)
 
 	script.set_event_filter(defines.events.on_robot_mined_entity, filters)
 	script.set_event_filter(defines.events.on_pre_player_mined_item, filters)
+	script.set_event_filter(defines.events.on_space_platform_mined_entity, filters)
 	script.set_event_filter(defines.events.on_entity_died, filters)
 	script.set_event_filter(defines.events.script_raised_destroy, filters)
 end
